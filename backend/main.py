@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from scheduler import start_scheduler, shutdown_scheduler
-from routers import jobs, signals, resume, outreach, pipeline, auth
+from routers import jobs, signals, resume, outreach, pipeline, auth, hiring_managers
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -30,6 +30,7 @@ app.include_router(signals.router,  prefix="/signals",  tags=["signals"])
 app.include_router(resume.router,   prefix="/resume",   tags=["resume"])
 app.include_router(outreach.router, prefix="/outreach", tags=["outreach"])
 app.include_router(pipeline.router, prefix="/pipeline", tags=["pipeline"])
+app.include_router(hiring_managers.router, prefix="/hiring-managers", tags=["hiring-managers"])
 
 @app.get("/health")
 async def health():

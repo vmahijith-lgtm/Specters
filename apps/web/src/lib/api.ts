@@ -44,4 +44,11 @@ export const api = {
       method: 'PATCH',
       body: JSON.stringify({ user_id: userId, job_id: jobId, status, notes }),
     }),
+  getHiringManagers: (jobId: string) =>
+    apiFetch(`/hiring-managers?job_id=${jobId}`),
+  discoverHiringManagers: (jobId: string, userId: string) =>
+    apiFetch('/hiring-managers/discover', {
+      method: 'POST',
+      body: JSON.stringify({ job_id: jobId, user_id: userId }),
+    }),
 }
