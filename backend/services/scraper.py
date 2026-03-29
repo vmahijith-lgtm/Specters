@@ -6,6 +6,7 @@ from playwright.async_api import async_playwright
 from datetime import datetime, timezone
 from typing import Optional
 import asyncio
+import re
 
 USER_AGENT = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -63,6 +64,17 @@ async def scrape_linkedin_jobs(role: str, location: str, limit: int = 5) -> list
     except Exception as e:
         print(f"[scraper] linkedin failed for '{role}' in '{location}': {e}")
     return jobs
+
+async def scrape_jobs_for_company(company: str, limit: int = 5) -> list[dict]:
+    """Scrape LinkedIn for open roles at a specific watchlist company.
+
+    Uses the company name as the search keyword and keeps only results whose
+    company field contains the watchlist name as a whole word (case-insensitive),
+    preventing false matches such as 'Apple' hitting 'Pineapple Inc.'.
+    """
+    jobs = await scrape_linkedin_jobs(role=company, location="", limit=limit)
+    pattern = re.compile(r'\b' + re.escape(company) + r'\b', re.IGNORECASE)
+    return [j for j in jobs if pattern.search(j["company"])]
 
 async def scrape_all_for_user(target_roles: list[str], target_locations: list[str]) -> list[dict]:
     """Scrape all role × location combinations, deduplicate by URL."""

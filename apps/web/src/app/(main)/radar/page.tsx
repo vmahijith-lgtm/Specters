@@ -19,18 +19,28 @@ export default function RadarPage() {
   const supabase = createClient()
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      if (data.user) {
-        supabase.from('profiles').select('watchlist').eq('id', data.user.id).single()
-          .then(({ data: p }) => {
-            if (p && p.watchlist && p.watchlist.length > 0) {
-              setHasWatchlist(true)
-            }
-          })
-      }
-    })
+    async function load() {
+      const { data: authData } = await supabase.auth.getUser()
+      let watchlist: string[] = []
 
-    api.getSignals(40).then(r => { setSignals(r.signals); setLoading(false) })
+      if (authData.user) {
+        const { data: p } = await supabase
+          .from('profiles')
+          .select('watchlist')
+          .eq('id', authData.user.id)
+          .single()
+        watchlist = (p && p.watchlist) || []
+        if (watchlist.length > 0) setHasWatchlist(true)
+      }
+
+      try {
+        const r = await api.getSignals(0, watchlist.length > 0 ? watchlist : undefined)
+        setSignals(r.signals)
+      } finally {
+        setLoading(false)
+      }
+    }
+    load()
   }, [])
 
   return (
@@ -92,9 +102,9 @@ export default function RadarPage() {
                     Source Link ↗
                   </a>
                 )}
-                {s.created_at && (
+                {s.detected_at && (
                   <span className="text-xs text-brand-text-muted/50 font-medium tracking-wider uppercase mt-4">
-                    {new Date(s.created_at).toLocaleDateString()}
+                    {new Date(s.detected_at).toLocaleDateString()}
                   </span>
                 )}
               </div>

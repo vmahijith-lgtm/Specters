@@ -15,7 +15,11 @@ export const api = {
     return apiFetch(`/jobs?${qs}`)
   },
   getJob: (id: string) => apiFetch(`/jobs/${id}`),
-  getSignals: (minScore = 0) => apiFetch(`/signals?min_score=${minScore}`),
+  getSignals: (minScore = 0, companies?: string[]) => {
+    const qs = new URLSearchParams({ min_score: String(minScore) })
+    if (companies && companies.length > 0) qs.set('companies', companies.join(','))
+    return apiFetch(`/signals?${qs}`)
+  },
   tailorResume: (jobId: string, userId: string, createDoc = true) =>
     apiFetch('/resume/tailor', {
       method: 'POST',
