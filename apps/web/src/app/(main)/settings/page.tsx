@@ -42,7 +42,7 @@ function SettingsContent() {
       full_name: profile.full_name,
       target_roles: targetRolesRaw.split(',').map((s: string) => s.trim()).filter(Boolean),
       target_locations: targetLocationsRaw.split(',').map((s: string) => s.trim()).filter(Boolean),
-      watchlist: watchlistRaw.split(',').map((s: string) => s.trim()).filter(Boolean),
+      watchlist: watchlistRaw.split(/[,\n]+/).map((s: string) => s.trim()).filter(Boolean),
       llm_provider: profile.llm_provider,
       llm_api_key: profile.llm_api_key,
       email_digest: profile.email_digest,
@@ -105,7 +105,7 @@ function SettingsContent() {
           </div>
 
           {/* Watchlist */}
-          <Field label="Company Watchlist" hint="Companies to track for pre-posting signals">
+          <Field label="Company Watchlist" hint="Comma-separated (e.g. OpenAI, Anthropic, Stripe)">
             <textarea value={profile.watchlist_raw ?? (profile.watchlist || []).join(', ')}
               onChange={e => update('watchlist_raw', e.target.value)}
               className="w-full bg-brand-surface border border-brand-border rounded-xl px-4 py-3 text-brand-text placeholder-brand-text-muted/50 focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-all min-h-[100px] resize-y shadow-inner" placeholder="OpenAI, Anthropic, Stripe" />

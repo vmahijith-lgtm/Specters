@@ -84,6 +84,7 @@ export default function RadarPage() {
               <button
                 onClick={handleScanNow}
                 disabled={scanning}
+                aria-label={scanning ? 'Scanning for signals…' : 'Scan for signals now'}
                 className="mt-6 btn-primary px-6 py-2.5 text-sm font-medium flex items-center gap-2 mx-auto disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {scanning ? (

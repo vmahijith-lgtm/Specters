@@ -8,8 +8,8 @@ from services.signal_engine import run_signal_scan
 from services.scraper import scrape_all_for_user, scrape_jobs_for_company
 from services.email_service import send_daily_digest
 from database import supabase
-from datetime import datetime, timezone
 import asyncio
+from datetime import datetime, timezone
 
 scheduler = AsyncIOScheduler(timezone="UTC")
 
