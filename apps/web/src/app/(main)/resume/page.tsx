@@ -11,11 +11,11 @@ export default function ResumePage() {
   const supabase = createClient()
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user)
-      if (data.user) {
-        supabase.from('profiles').select('base_resume').eq('id', data.user.id).single()
-          .then(({ data: p }) => { if (p?.base_resume) setResumeText(p.base_resume) })
+    supabase.auth.getUser().then((res: any) => {
+      setUser(res.data?.user)
+      if (res.data?.user) {
+        supabase.from('profiles').select('base_resume').eq('id', res.data.user.id).single()
+          .then(({ data: p }: any) => { if (p?.base_resume) setResumeText(p.base_resume) })
       }
     })
   }, [])

@@ -18,10 +18,10 @@ function SettingsContent() {
   }, [searchParams])
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      if (data.user) {
-        supabase.from('profiles').select('*').eq('id', data.user.id).single()
-          .then(({ data: p }) => setProfile(p))
+    supabase.auth.getUser().then((res: any) => {
+      if (res.data?.user) {
+        supabase.from('profiles').select('*').eq('id', res.data.user.id).single()
+          .then(({ data: p }: any) => setProfile(p))
       }
     })
   }, [])

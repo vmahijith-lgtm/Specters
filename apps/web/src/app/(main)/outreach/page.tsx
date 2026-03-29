@@ -27,7 +27,7 @@ export default function OutreachPage() {
   const supabase = createClient()
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUser(data.user))
+    supabase.auth.getUser().then((res: any) => setUser(res.data?.user))
     api.getJobs({ limit: 50 }).then(r => setJobs(r.jobs))
   }, [])
 

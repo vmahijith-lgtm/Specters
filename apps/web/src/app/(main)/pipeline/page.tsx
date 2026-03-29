@@ -18,10 +18,10 @@ export default function PipelinePage() {
   const supabase = createClient()
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user)
-      if (data.user) {
-        api.getPipeline(data.user.id).then(setPipeline)
+    supabase.auth.getUser().then((res: any) => {
+      setUser(res.data?.user)
+      if (res.data?.user) {
+        api.getPipeline(res.data.user.id).then(setPipeline)
       }
     })
   }, [])
