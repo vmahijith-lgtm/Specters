@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Query
 from database import supabase
-from typing import Optional
+from services.signal_engine import run_signal_scan
+from typing import Optional, List
 
 router = APIRouter()
 
@@ -24,3 +25,13 @@ async def list_signals(
             query = query.in_("company", company_list)
     result = query.execute()
     return {"signals": result.data}
+
+@router.post("/scan")
+async def scan_signals(companies: List[str]):
+    """Trigger an on-demand signal scan for a list of companies and persist results."""
+    if not companies:
+        return {"signals": []}
+    results = await run_signal_scan(companies)
+    if results:
+        supabase.table("signals").upsert(results, on_conflict="company,signal_type,headline").execute()
+    return {"signals": results}
