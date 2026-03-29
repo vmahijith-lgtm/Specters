@@ -5,7 +5,7 @@ APScheduler tasks that run automatically.
 """
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from services.signal_engine import run_signal_scan
-from services.scraper import scrape_all_for_user
+from services.scraper import scrape_all_for_user, scrape_jobs_for_company
 from services.email_service import send_daily_digest
 from database import supabase
 import asyncio
@@ -38,17 +38,32 @@ async def signal_scan_task():
 async def daily_job_hunt_task():
     print("[scheduler] running daily job hunt")
     resp = supabase.table("profiles").select(
-        "id,target_roles,target_locations,llm_api_key,email_digest"
+        "id,target_roles,target_locations,watchlist,llm_api_key,email_digest"
     ).execute()
 
     for user in resp.data:
-        if not user.get("target_roles") or not user.get("target_locations"):
-            continue
-        jobs = await scrape_all_for_user(user["target_roles"], user["target_locations"])
+        jobs: list[dict] = []
+
+        # 1. Scrape by target roles × locations
+        if user.get("target_roles") and user.get("target_locations"):
+            jobs.extend(await scrape_all_for_user(user["target_roles"], user["target_locations"]))
+
+        # 2. Scrape open roles specifically at each watchlist company
+        for company in (user.get("watchlist") or []):
+            company_jobs = await scrape_jobs_for_company(company)
+            jobs.extend(company_jobs)
+
+        # 3. Deduplicate by URL
+        seen_urls: set[str] = set()
+        unique_jobs: list[dict] = []
+        for job in jobs:
+            if job["url"] not in seen_urls:
+                seen_urls.add(job["url"])
+                unique_jobs.append(job)
 
         # Upsert jobs (deduplicate on URL)
         inserted = []
-        for job in jobs:
+        for job in unique_jobs:
             try:
                 r = supabase.table("jobs").upsert(job, on_conflict="url").execute()
                 if r.data:
