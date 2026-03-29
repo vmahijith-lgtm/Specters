@@ -5,23 +5,23 @@ import { api } from '@/lib/api'
 import type { HiringManager } from '@hiresignal/shared'
 
 const LINKEDIN_PATTERNS = [
-  { label: 'Direct intent',  query: '"I\'m hiring" OR "looking for a" OR "open role"' },
+  { label: 'Direct intent', query: '"I\'m hiring" OR "looking for a" OR "open role"' },
   { label: 'Call to action', query: '"DM me" OR "send your resume" OR "drop your portfolio"' },
-  { label: 'Team growth',    query: '"growing the team" OR "excited to announce" OR "just opened a req"' },
+  { label: 'Team growth', query: '"growing the team" OR "excited to announce" OR "just opened a req"' },
 ]
 
 export default function OutreachPage() {
-  const [jobId, setJobId]             = useState('')
+  const [jobId, setJobId] = useState('')
   const [managerName, setManagerName] = useState('')
   const [achievement, setAchievement] = useState('')
-  const [draft, setDraft]             = useState('')
-  const [loading, setLoading]         = useState(false)
-  const [jobs, setJobs]               = useState<any[]>([])
-  const [user, setUser]               = useState<any>(null)
+  const [draft, setDraft] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [jobs, setJobs] = useState<any[]>([])
+  const [user, setUser] = useState<any>(null)
 
-  const [managers, setManagers]               = useState<HiringManager[]>([])
+  const [managers, setManagers] = useState<HiringManager[]>([])
   const [managersLoading, setManagersLoading] = useState(false)
-  const [managersError, setManagersError]     = useState('')
+  const [managersError, setManagersError] = useState('')
   const [selectedManagerId, setSelectedManagerId] = useState('')
 
   const supabase = createClient()
@@ -36,7 +36,7 @@ export default function OutreachPage() {
     if (!jobId) return
     api.getHiringManagers(jobId)
       .then(r => setManagers(r.managers))
-      .catch(() => {/* silently ignore – user can trigger discovery manually */})
+      .catch(() => {/* silently ignore – user can trigger discovery manually */ })
   }, [jobId])
 
   function handleJobChange(newJobId: string) {
@@ -110,11 +110,11 @@ export default function OutreachPage() {
               </div>
             ))}
           </div>
-          
-           <div className="mt-8 pt-6 border-t border-brand-border text-sm text-brand-text-muted">
-             <span className="text-amber-400 mr-2">💡</span>
-             Use these semantic search vectors to surface high-affinity social signals directly on LinkedIn.
-           </div>
+
+          <div className="mt-8 pt-6 border-t border-brand-border text-sm text-brand-text-muted">
+            <span className="text-amber-400 mr-2">💡</span>
+            Use these semantic search vectors to surface high-affinity social signals directly on LinkedIn.
+          </div>
         </div>
 
         {/* DM generator */}
@@ -156,11 +156,10 @@ export default function OutreachPage() {
                     {managers.map(m => (
                       <div
                         key={m.id}
-                        className={`flex items-center gap-3 p-3 rounded-xl border transition-colors cursor-pointer ${
-                          selectedManagerId === m.id
+                        className={`flex items-center gap-3 p-3 rounded-xl border transition-colors cursor-pointer ${selectedManagerId === m.id
                             ? 'border-brand-primary bg-brand-primary/10'
                             : 'border-brand-border bg-black/20 hover:border-brand-primary/50'
-                        }`}
+                          }`}
                         onClick={() => selectManager(m)}>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-semibold text-brand-text truncate">
@@ -192,21 +191,21 @@ export default function OutreachPage() {
                 )}
               </div>
             )}
-            
+
             <div>
               <label className="text-sm font-bold text-brand-text block mb-2 uppercase tracking-wide">Hiring Manager First Name</label>
               <input value={managerName} onChange={e => setManagerName(e.target.value)}
                 placeholder="e.g. Sarah"
                 className="w-full bg-brand-surface border border-brand-border rounded-xl px-4 py-3.5 text-brand-text placeholder-brand-text-muted/50 focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-all shadow-inner" />
             </div>
-            
+
             <div>
               <label className="text-sm font-bold text-brand-text block mb-2 uppercase tracking-wide">Core Achievement (1 Sentence)</label>
               <input value={achievement} onChange={e => setAchievement(e.target.value)}
                 placeholder="e.g. Scaled infrastructure to 1M daily active users"
                 className="w-full bg-brand-surface border border-brand-border rounded-xl px-4 py-3.5 text-brand-text placeholder-brand-text-muted/50 focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-all shadow-inner" />
             </div>
-            
+
             <button onClick={generateDraft} disabled={loading || !jobId}
               className="btn-primary w-full px-6 py-4 text-base flex items-center justify-center gap-2 mt-4">
               {loading ? (

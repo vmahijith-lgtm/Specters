@@ -70,7 +70,7 @@ export default function ResumePage() {
         </div>
 
         <div className="lg:col-span-1">
-           <div className="relative overflow-hidden border border-brand-primary/30 bg-brand-primary/5 rounded-3xl p-8 backdrop-blur-md shadow-[0_0_30px_rgba(204,151,255,0.05)]">
+          <div className="relative overflow-hidden border border-brand-primary/30 bg-brand-primary/5 rounded-3xl p-8 backdrop-blur-md shadow-[0_0_30px_rgba(204,151,255,0.05)]">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-primary to-brand-primary-dim opacity-50" />
             <h3 className="font-bold text-xl text-brand-primary mb-4 flex items-center gap-2">
               <span className="text-2xl">✨</span> How Tailoring Works
@@ -82,12 +82,12 @@ export default function ResumePage() {
               <li className="pl-2">A Google Doc is instantly generated.</li>
               <li className="pl-2">Your match probability score (0–100) is shown in the Pipeline.</li>
             </ol>
-            
+
             <div className="mt-8 pt-6 border-t border-brand-primary/20">
-               <p className="text-xs text-brand-primary font-bold uppercase tracking-widest flex items-center gap-2">
-                 <span className="w-2 h-2 rounded-full bg-brand-primary animate-ping" />
-                 System Active
-               </p>
+              <p className="text-xs text-brand-primary font-bold uppercase tracking-widest flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-brand-primary animate-ping" />
+                System Active
+              </p>
             </div>
           </div>
         </div>

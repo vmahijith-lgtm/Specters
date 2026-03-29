@@ -60,8 +60,8 @@ export default function JobsPage() {
 
       {loading ? (
         <div className="flex items-center gap-3 text-brand-primary animate-pulse mt-8">
-           <div className="w-5 h-5 rounded-full border-2 border-brand-primary border-t-transparent animate-spin" />
-           <span className="font-medium tracking-wide text-sm uppercase">Syncing latest listings...</span>
+          <div className="w-5 h-5 rounded-full border-2 border-brand-primary border-t-transparent animate-spin" />
+          <span className="font-medium tracking-wide text-sm uppercase">Syncing latest listings...</span>
         </div>
       ) : filtered.length === 0 ? (
         <div className="glass-card rounded-3xl p-10 text-center max-w-lg mx-auto mt-12">
@@ -80,13 +80,13 @@ export default function JobsPage() {
                   </a>
                   {job.remote && <span className="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1 rounded-full font-bold uppercase tracking-wider backdrop-blur-md">Remote</span>}
                 </div>
-                
+
                 <p className="text-base text-brand-text-muted font-medium flex items-center gap-2">
                   <span className="text-brand-text">{job.company}</span>
                   <span className="opacity-50">•</span>
                   <span>{job.location || 'Global/Remote'}</span>
                 </p>
-                
+
                 {job.signal_id && (
                   <div className="mt-3 inline-flex items-center gap-1.5 text-xs bg-brand-primary/10 text-brand-primary border border-brand-primary/20 px-3 py-1.5 rounded-full font-bold uppercase tracking-widest backdrop-blur-md">
                     <span className="text-amber-400">⚡</span> Pre-signal detected
