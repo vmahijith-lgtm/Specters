@@ -1,0 +1,10 @@
+{
+  "name": "hiresignal",
+  "private": true,
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "web": "cd apps/web && npm run dev",
+    "mobile": "cd apps/mobile && npx expo start",
+    "api": "cd backend && uvicorn main:app --reload --port 8000"
+  }
+}

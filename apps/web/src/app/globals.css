@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-bg: #0B0B10;
+  --color-brand-surface: #0e0e13;
+  --color-brand-surface-low: #131319;
+  --color-brand-surface-high: #19191f;
+  --color-brand-surface-highest: #25252d;
+
+  --color-brand-primary: #cc97ff;
+  --color-brand-primary-dim: #9c48ea;
+  --color-brand-secondary: #9093ff;
+  --color-brand-secondary-dim: #6063ee;
+
+  --color-brand-text: #f9f5fd;
+  --color-brand-text-muted: #acaab1;
+
+  --color-brand-border: rgba(118, 116, 123, 0.15);
+  
+  --font-display: var(--font-space), "Space Grotesk", sans-serif;
+  --font-body: var(--font-manrope), "Manrope", sans-serif;
+}
+
+/* Base resets & theme application */
+:root {
+  --background: #0B0B10;
+  --foreground: #f9f5fd;
+}
+
+body {
+  background: var(--color-brand-bg);
+  color: var(--color-brand-text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+/* Custom Design System Classes */
+@layer utilities {
+  .glass-card {
+    background: rgba(25, 25, 31, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--color-brand-border);
+    box-shadow: inset 0 1px 0 0 rgba(204, 151, 255, 0.1);
+  }
+
+  .solid-card {
+    background: var(--color-brand-surface-high);
+    border: 1px solid var(--color-brand-border);
+    box-shadow: inset 0 1px 0 0 rgba(204, 151, 255, 0.05);
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--color-brand-primary), var(--color-brand-primary-dim));
+    color: #1a0033; /* Dark text for contrast against bright purple */
+    font-weight: 600;
+    font-family: var(--font-body);
+    border-radius: 9999px;
+    box-shadow: 0px 4px 20px rgba(156, 72, 234, 0.25);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    box-shadow: 0px 8px 30px rgba(156, 72, 234, 0.4);
+    transform: translateY(-2px);
+  }
+
+  .btn-primary:disabled {
+    background: var(--color-brand-surface-highest);
+    color: var(--color-brand-text-muted);
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+
+  .ambient-glow {
+    box-shadow: 0px 20px 40px rgba(156, 72, 234, 0.15);
+  }
+}

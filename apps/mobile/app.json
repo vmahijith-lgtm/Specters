@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "HireSignal",
+    "slug": "hiresignal",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "scheme": "hiresignal",
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#7C3AED"
+      },
+      "package": "com.hiresignal.app",
+      "googleServicesFile": "./google-services.json"
+    },
+    "plugins": [
+      "expo-router",
+      ["expo-notifications", { "color": "#7C3AED" }]
+    ],
+    "extra": {
+      "eas": { "projectId": "YOUR_EAS_PROJECT_ID" },
+      "supabaseUrl": "https://xxxx.supabase.co",
+      "supabaseAnonKey": "YOUR_ANON_KEY",
+      "apiUrl": "http://localhost:8000"
+    }
+  }
+}
