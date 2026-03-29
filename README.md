@@ -1,69 +1,81 @@
-# HireSignal 📡
+# HireSignal
 
-Predictive job intelligence. Detect hiring signals 48-72 hours before listings go public and automate your application pipeline.
+HireSignal is a proactive job-seeking platform designed to find top jobs *before* they are officially posted. By scanning early social and business signals—like TechCrunch funding rounds, GitHub open-source spikes, or leadership changes—HireSignal identifies expanding companies so you can reach out to Hiring Managers ahead of the competition.
 
-## System Architecture
+## 🏗 Architecture
+This project is built as a complete monorepo, containing:
+- **Backend (`/backend`)**: A robust Python/FastAPI service operating background workers, Playwright web-scrapers, automated outreach LLM integrations (OpenAI, Anthropic, Gemini), and the Signal Radar engine.
+- **Web App (`/apps/web`)**: A modern Next.js React frontend that provides the User Dashboard, Job Pipeline management, Settings, and Radar view.
+- **Mobile App (`/apps/mobile`)**: A React Native (Expo) companion app for mobile push notifications and on-the-go pipeline tracking.
 
-HireSignal is a monorepo containing three layers:
-1. **Frontend**: Next.js 14 web app and Expo / React Native mobile app.
-2. **Backend**: FastAPI with automated Playwright scrapers and LLM pipelines (OpenAI/Anthropic/Gemini).
-3. **Database**: Supabase (PostgreSQL) handling Auth, RLS, and data.
+## ✨ Core Features
+1. **Radar (Signal Detection)**: Finds companies with positive predictive hiring signals (e.g., fast headcount growth, new funding, unusual open-source activity).
+2. **Daily Job Hunt (Scraper)**: Automatically runs scheduled, tailored daily searches across LinkedIn jobs using headless Playwright to fetch roles that match your target criteria.
+3. **Application Pipeline**: Tracks the jobs you save and automatically generates highly-tailored resume variants synced directly to your Google Drive via OAuth.
+4. **Outreach Generator**: Uses context-aware LLMs to draft personalized connection request messages for Hiring Managers or Recruiters.
 
-## Features
-- 💰 **Signal Detection Engine**: Scrapes funding rounds, headcount growth, GitHub spikes before jobs exist.
-- 🎯 **AI Resume Tailoring**: Rewrite resumes automatically to match specific job descriptions using LLMs.
-- ✉️ **Outreach Generator**: Generates concise, personalised LinkedIn DMs to hiring managers based on your top achievements.
-- 🔀 **Pipeline Management**: Kanban-style board to track applications from 'Saved' to 'Offer'.
-- 📱 **Cross-Platform**: Full Next.js Web Dashboard + React Native Mobile App.
+---
 
-## Local Development
+## 🚀 Deployment (Render + Vercel)
 
-### 1. Database Setup
-1. Create a [Supabase](https://supabase.com/) project.
-2. Run the `supabase_schema.sql` file in the SQL Editor to generate the schema, RLS policies, and triggers.
+This repository is ready to be connected to GitHub and deployed directly across modern cloud platforms.
 
-### 2. Environment Variables
-Copy `.env.example` to `.env` in the root and fill in the values:
-```bash
-cp .env.example .env
-```
-- Include Supabase credentials.
-- Add Google OAuth credentials for Drive integration.
-- Add Resend API key for daily digests.
-- Configure Cron secret for secure scheduler endpoints.
+### **Backend (Render)**
+The backend is completely containerized via `render.yaml`. 
+1. Create a new **Web Service** on [Render](https://render.com/).
+2. Select your GitHub repository.
+3. Render will automatically detect the `render.yaml` file in the root. This configuration provisions:
+   - Python 3.11 environment.
+   - Installs all dependencies via `backend/render-build.sh`.
+   - Downloads necessary Playwright Chromium binaries.
+   - Starts the Uvicorn web server.
+4. Provide the following **Environment Variables** in Render's dashboard:
+   - `SUPABASE_URL`: Your Supabase generic URL.
+   - `SUPABASE_SERVICE_ROLE_KEY`: Your Supabase admin key (required for automated scraper inserts).
+   - Additional LLM API Keys as needed.
 
-### 3. Backend (FastAPI)
+### **Frontend Web (Vercel)**
+1. Connect the repository to [Vercel](https://vercel.com/).
+2. Set the **Framework Preset** to Next.js.
+3. Set the **Root Directory** to `apps/web`.
+4. Provide standard Next.js environment variables (like `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`).
+5. Deploy!
+
+### **Database (Supabase)**
+All schemas, row-level security policies, and constraints are located in `supabase_schema.sql`. You can initialize or update any newly provisioned Supabase Postgres database simply by running this SQL file via the Supabase SQL Editor.
+
+---
+
+## 🛠 Local Development Setup
+
+### Prerequisites
+- Node.js 18+ (for Web/Mobile)
+- Python 3.10+ (for Backend)
+- PostgreSQL (via Supabase platform natively or locally)
+
+### 1. Database
+1. Run the script `supabase_schema.sql` in your Supabase SQL interface.
+
+### 2. Backend
 ```bash
 cd backend
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 playwright install chromium
+```
+*Copy `.env.example` to `.env` and fill in necessary keys.*
+```bash
 uvicorn main:app --reload
 ```
 
-### 4. Web Frontend (Next.js)
+### 3. Frontend Web
 ```bash
 cd apps/web
 npm install
 npm run dev
 ```
 
-### 5. Mobile App (Expo)
-```bash
-cd apps/mobile
-npm install
-npx expo start
-```
-
-## Production Deployment
-- **Web**: Deploy `apps/web` to Vercel. Add environment variables.
-- **Backend**: Deploy `backend` to Railway/Render (using Dockerfile or standard Python environment). Schedule `scheduler.py` cron jobs using external pingers (or built-in apscheduler if persistent).
-- **Mobile**: Use EAS build (`eas build -p all`) for iOS and Android deployment.
-
-## Tech Stack
-- **Web**: Next.js App Router, TailwindCSS, React, Supabase Auth.
-- **Mobile**: Expo, React Native, React Navigation.
-- **Backend / Workers**: Python, FastAPI, Playwright (async), APScheduler, httpx, Beautifulsoup4, Google API client.
-- **AI**: OpenAI, Anthropic, Google Generative AI SDKs.
-- **Database**: PostgreSQL (Supabase) + Prisma/SQL.
+## 📝 Troubleshooting & Notes
+- **Testing the Scraper Locally:** You can invoke an immediate Playwright scrape by activating the python virtual environment and running `python backend/test_scraper.py`.
+- **Database Idempotency:** The `supabase_schema.sql` file is specifically designed to be idempotent. Running it sequentially will intelligently skip resources that already exist while creating missing tables, indices, and constraints.
