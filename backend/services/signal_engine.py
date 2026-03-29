@@ -9,6 +9,8 @@ from bs4 import BeautifulSoup
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
+COMPANY_SPLIT_RE = re.compile(r"[,\n]+")
+
 SIGNAL_WEIGHTS = {
     "series_a": 75,
     "series_b": 85,
@@ -21,13 +23,47 @@ SIGNAL_WEIGHTS = {
     "product_launch": 65,
 }
 
+
+def normalize_companies(raw_companies) -> list[str]:
+    """Normalize mixed company inputs into a clean, de-duplicated list."""
+    if raw_companies is None:
+        return []
+
+    if isinstance(raw_companies, str):
+        candidates = [raw_companies]
+    elif isinstance(raw_companies, (list, tuple, set)):
+        candidates = [str(c) for c in raw_companies if c is not None]
+    else:
+        candidates = [str(raw_companies)]
+
+    clean: list[str] = []
+    seen: set[str] = set()
+    for candidate in candidates:
+        for part in COMPANY_SPLIT_RE.split(candidate):
+            company = part.strip()
+            if not company:
+                continue
+            key = company.casefold()
+            if key in seen:
+                continue
+            seen.add(key)
+            clean.append(company)
+    return clean
+
 async def detect_funding_signal(company: str) -> Optional[dict]:
     """Scrapes TechCrunch RSS for funding news within last 72 hours."""
     try:
+        company = company.strip()
+        if not company:
+            return None
         async with httpx.AsyncClient(timeout=15) as client:
             r = await client.get(
-                f"https://techcrunch.com/wp-json/wp/v2/posts"
-                f"?search={company}+funding&per_page=5&_fields=title,date,link,excerpt"
+                "https://techcrunch.com/wp-json/wp/v2/posts",
+                params={
+                    "search": f"{company} funding",
+                    "per_page": 5,
+                    "_fields": "title,date,link,excerpt",
+                },
             )
             if r.status_code != 200:
                 return None
@@ -55,9 +91,15 @@ async def detect_funding_signal(company: str) -> Optional[dict]:
 async def detect_github_spike(company: str) -> Optional[dict]:
     """Checks GitHub org repos for unusual recent commits (hiring signal)."""
     try:
+        company = company.strip()
+        if not company:
+            return None
         async with httpx.AsyncClient(timeout=10, headers={"Accept": "application/vnd.github.v3+json"}) as client:
             # Find org
-            r = await client.get(f"https://api.github.com/search/users?q={company}+type:org&per_page=1")
+            r = await client.get(
+                "https://api.github.com/search/users",
+                params={"q": f"{company} type:org", "per_page": 1},
+            )
             if r.status_code != 200 or not r.json().get("items"):
                 return None
             org_login = r.json()["items"][0]["login"]
@@ -98,7 +140,7 @@ def _extract_series(text: str) -> str:
 async def run_signal_scan(companies: list[str]) -> list[dict]:
     """Run all signal detectors against a watchlist and return sorted results."""
     results = []
-    for company in companies:
+    for company in normalize_companies(companies):
         funding = await detect_funding_signal(company)
         if funding:
             results.append(funding)

@@ -4,7 +4,8 @@ APScheduler tasks that run automatically.
 - Every day at 7am: job scrape + email digest
 """
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from services.signal_engine import run_signal_scan
+from services.signal_engine import run_signal_scan, normalize_companies
+from services.signal_store import persist_signals
 from services.scraper import scrape_all_for_user, scrape_jobs_for_company
 from services.email_service import send_daily_digest
 from database import supabase
@@ -31,13 +32,12 @@ async def signal_scan_task():
     resp = supabase.table("profiles").select("watchlist").execute()
     all_companies: set[str] = set()
     for row in resp.data:
-        all_companies.update(row.get("watchlist") or [])
+        all_companies.update(normalize_companies(row.get("watchlist")))
     if not all_companies:
         return
     signals = await run_signal_scan(list(all_companies))
-    if signals:
-        supabase.table("signals").upsert(signals, on_conflict="company,signal_type,headline").execute()
-    print(f"[scheduler] stored {len(signals)} signals")
+    stored = persist_signals(signals)
+    print(f"[scheduler] stored {stored} signals")
 
 async def daily_job_hunt_task():
     print("[scheduler] running daily job hunt")
@@ -53,7 +53,7 @@ async def daily_job_hunt_task():
             jobs.extend(await scrape_all_for_user(user["target_roles"], user["target_locations"]))
 
         # 2. Scrape open roles specifically at each watchlist company
-        for company in (user.get("watchlist") or []):
+        for company in normalize_companies(user.get("watchlist")):
             company_jobs = await scrape_jobs_for_company(company)
             jobs.extend(company_jobs)
 

@@ -32,8 +32,39 @@ CREATE TABLE IF NOT EXISTS signals (
   headline      TEXT,
   source_url    TEXT,
   raw_data      JSONB,
-  detected_at   TIMESTAMPTZ DEFAULT NOW()
+  detected_at   TIMESTAMPTZ DEFAULT NOW(),
+  CONSTRAINT signals_company_signal_type_headline_key
+    UNIQUE (company, signal_type, headline)
 );
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_constraint
+    WHERE conname = 'signals_company_signal_type_headline_key'
+  ) THEN
+    DELETE FROM signals s
+    USING (
+      SELECT id
+      FROM (
+        SELECT
+          id,
+          ROW_NUMBER() OVER (
+            PARTITION BY company, signal_type, headline
+            ORDER BY detected_at DESC NULLS LAST, id DESC
+          ) AS rn
+        FROM signals
+      ) ranked
+      WHERE ranked.rn > 1
+    ) duplicates
+    WHERE s.id = duplicates.id;
+
+    ALTER TABLE signals
+    ADD CONSTRAINT signals_company_signal_type_headline_key
+    UNIQUE (company, signal_type, headline);
+  END IF;
+END $$;
 
 -- Scraped job listings
 CREATE TABLE IF NOT EXISTS jobs (
@@ -89,18 +120,23 @@ CREATE TABLE IF NOT EXISTS hiring_managers (
 ALTER TABLE profiles         ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_jobs        ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "users_own_profile" ON profiles;
 CREATE POLICY "users_own_profile"
   ON profiles FOR ALL
   USING (auth.uid() = id)
   WITH CHECK (auth.uid() = id);
 
+DROP POLICY IF EXISTS "users_own_jobs" ON user_jobs;
 CREATE POLICY "users_own_jobs"
   ON user_jobs FOR ALL
   USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
 
 -- Signals and jobs are public-read (all users see all signals)
+DROP POLICY IF EXISTS "signals_public_read" ON signals;
 CREATE POLICY "signals_public_read"  ON signals  FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "jobs_public_read" ON jobs;
 CREATE POLICY "jobs_public_read"     ON jobs     FOR SELECT USING (true);
 
 -- ══════════════════════════════════════════════════════
@@ -111,10 +147,12 @@ RETURNS TRIGGER AS $$
 BEGIN NEW.updated_at = NOW(); RETURN NEW; END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trg_profiles_updated_at ON profiles;
 CREATE TRIGGER trg_profiles_updated_at
   BEFORE UPDATE ON profiles
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 
+DROP TRIGGER IF EXISTS trg_user_jobs_updated_at ON user_jobs;
 CREATE TRIGGER trg_user_jobs_updated_at
   BEFORE UPDATE ON user_jobs
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
@@ -122,10 +160,10 @@ CREATE TRIGGER trg_user_jobs_updated_at
 -- ══════════════════════════════════════════════════════
 -- Indexes
 -- ══════════════════════════════════════════════════════
-CREATE INDEX idx_jobs_company         ON jobs(company);
-CREATE INDEX idx_jobs_posted_at       ON jobs(posted_at DESC);
-CREATE INDEX idx_signals_company      ON signals(company);
-CREATE INDEX idx_signals_score        ON signals(signal_score DESC);
-CREATE INDEX idx_user_jobs_status     ON user_jobs(status);
-CREATE INDEX idx_user_jobs_user_id    ON user_jobs(user_id);
-CREATE INDEX idx_hiring_managers_job_id ON hiring_managers(job_id);
+CREATE INDEX IF NOT EXISTS idx_jobs_company         ON jobs(company);
+CREATE INDEX IF NOT EXISTS idx_jobs_posted_at       ON jobs(posted_at DESC);
+CREATE INDEX IF NOT EXISTS idx_signals_company      ON signals(company);
+CREATE INDEX IF NOT EXISTS idx_signals_score        ON signals(signal_score DESC);
+CREATE INDEX IF NOT EXISTS idx_user_jobs_status     ON user_jobs(status);
+CREATE INDEX IF NOT EXISTS idx_user_jobs_user_id    ON user_jobs(user_id);
+CREATE INDEX IF NOT EXISTS idx_hiring_managers_job_id ON hiring_managers(job_id);

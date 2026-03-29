@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Query
 from database import supabase
-from services.signal_engine import run_signal_scan
+from services.signal_engine import run_signal_scan, normalize_companies
+from services.signal_store import persist_signals
 from typing import Optional, List
 
 router = APIRouter()
@@ -20,7 +21,7 @@ async def list_signals(
         .limit(limit)
     )
     if companies:
-        company_list = [c.strip() for c in companies.split(",") if c.strip()]
+        company_list = normalize_companies(companies)
         if company_list:
             query = query.in_("company", company_list)
     result = query.execute()
@@ -32,6 +33,5 @@ async def scan_signals(companies: List[str]):
     if not companies:
         return {"signals": []}
     results = await run_signal_scan(companies)
-    if results:
-        supabase.table("signals").upsert(results, on_conflict="company,signal_type,headline").execute()
+    persist_signals(results)
     return {"signals": results}
