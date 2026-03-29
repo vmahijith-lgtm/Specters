@@ -9,11 +9,15 @@ from services.scraper import scrape_all_for_user, scrape_jobs_for_company
 from services.email_service import send_daily_digest
 from database import supabase
 import asyncio
+from datetime import datetime, timezone
 
 scheduler = AsyncIOScheduler(timezone="UTC")
 
 def start_scheduler():
-    scheduler.add_job(signal_scan_task, "interval", hours=4, id="signal_scan")
+    scheduler.add_job(
+        signal_scan_task, "interval", hours=4, id="signal_scan",
+        next_run_time=datetime.now(timezone.utc),
+    )
     scheduler.add_job(daily_job_hunt_task, "cron", hour=7, minute=0, id="daily_digest")
     scheduler.start()
     print("[scheduler] started")
@@ -31,8 +35,8 @@ async def signal_scan_task():
     if not all_companies:
         return
     signals = await run_signal_scan(list(all_companies))
-    for sig in signals:
-        supabase.table("signals").upsert(sig, on_conflict="company,signal_type,headline").execute()
+    if signals:
+        supabase.table("signals").upsert(signals, on_conflict="company,signal_type,headline").execute()
     print(f"[scheduler] stored {len(signals)} signals")
 
 async def daily_job_hunt_task():

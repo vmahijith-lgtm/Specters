@@ -20,6 +20,11 @@ export const api = {
     if (companies && companies.length > 0) qs.set('companies', companies.join(','))
     return apiFetch(`/signals?${qs}`)
   },
+  scanSignals: (companies: string[]) =>
+    apiFetch('/signals/scan', {
+      method: 'POST',
+      body: JSON.stringify(companies),
+    }),
   tailorResume: (jobId: string, userId: string, createDoc = true) =>
     apiFetch('/resume/tailor', {
       method: 'POST',

@@ -15,13 +15,15 @@ const TYPE_LABELS: Record<string, string> = {
 export default function RadarPage() {
   const [signals, setSignals] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [scanning, setScanning] = useState(false)
   const [hasWatchlist, setHasWatchlist] = useState(false)
+  const [watchlist, setWatchlist] = useState<string[]>([])
   const supabase = createClient()
 
   useEffect(() => {
     async function load() {
       const { data: authData } = await supabase.auth.getUser()
-      let watchlist: string[] = []
+      let wl: string[] = []
 
       if (authData.user) {
         const { data: p } = await supabase
@@ -29,12 +31,15 @@ export default function RadarPage() {
           .select('watchlist')
           .eq('id', authData.user.id)
           .single()
-        watchlist = (p && p.watchlist) || []
-        if (watchlist.length > 0) setHasWatchlist(true)
+        wl = (p && p.watchlist) || []
+        if (wl.length > 0) {
+          setHasWatchlist(true)
+          setWatchlist(wl)
+        }
       }
 
       try {
-        const r = await api.getSignals(0, watchlist.length > 0 ? watchlist : undefined)
+        const r = await api.getSignals(0, wl.length > 0 ? wl : undefined)
         setSignals(r.signals)
       } finally {
         setLoading(false)
@@ -42,6 +47,17 @@ export default function RadarPage() {
     }
     load()
   }, [])
+
+  async function handleScanNow() {
+    if (!watchlist.length) return
+    setScanning(true)
+    try {
+      const r = await api.scanSignals(watchlist)
+      setSignals(r.signals)
+    } finally {
+      setScanning(false)
+    }
+  }
 
   return (
     <div className="animate-in fade-in duration-500">
@@ -63,7 +79,24 @@ export default function RadarPage() {
         <div className="glass-card rounded-3xl p-10 text-center max-w-lg mx-auto mt-20">
           <p className="text-brand-text-muted text-lg">No signals detected yet.</p>
           {hasWatchlist ? (
-            <p className="text-sm mt-2 text-brand-text-muted/60">We're actively scanning the network for your tuned watchlist. Check back soon.</p>
+            <>
+              <p className="text-sm mt-2 text-brand-text-muted/60">We're actively scanning the network for your tuned watchlist. Check back soon.</p>
+              <button
+                onClick={handleScanNow}
+                disabled={scanning}
+                aria-label={scanning ? 'Scanning for signals…' : 'Scan for signals now'}
+                className="mt-6 btn-primary px-6 py-2.5 text-sm font-medium flex items-center gap-2 mx-auto disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {scanning ? (
+                  <>
+                    <div className="w-4 h-4 rounded-full border-2 border-current border-t-transparent animate-spin" />
+                    Scanning…
+                  </>
+                ) : (
+                  '⚡ Scan Now'
+                )}
+              </button>
+            </>
           ) : (
             <p className="text-sm mt-2 text-brand-text-muted/60">Add companies to your watchlist in settings to calibrate the radar.</p>
           )}
