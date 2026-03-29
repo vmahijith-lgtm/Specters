@@ -79,7 +79,8 @@ CREATE TABLE IF NOT EXISTS hiring_managers (
   title       TEXT,
   linkedin_url TEXT,
   company     TEXT,
-  found_at    TIMESTAMPTZ DEFAULT NOW()
+  found_at    TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(job_id, linkedin_url)  -- dedup per job
 );
 
 -- ══════════════════════════════════════════════════════
@@ -127,3 +128,4 @@ CREATE INDEX idx_signals_company      ON signals(company);
 CREATE INDEX idx_signals_score        ON signals(signal_score DESC);
 CREATE INDEX idx_user_jobs_status     ON user_jobs(status);
 CREATE INDEX idx_user_jobs_user_id    ON user_jobs(user_id);
+CREATE INDEX idx_hiring_managers_job_id ON hiring_managers(job_id);

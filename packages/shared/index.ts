@@ -76,6 +76,7 @@ export interface HiringManager {
   title: string | null
   linkedin_url: string | null
   company: string | null
+  found_at: string | null
 }
 
 export interface TailorResumeRequest {
