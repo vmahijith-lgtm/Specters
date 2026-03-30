@@ -33,5 +33,6 @@ app.include_router(pipeline.router, prefix="/pipeline", tags=["pipeline"])
 app.include_router(hiring_managers.router, prefix="/hiring-managers", tags=["hiring-managers"])
 
 @app.get("/health")
+@app.head("/health")
 async def health():
     return {"status": "ok"}
