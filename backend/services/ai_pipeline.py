@@ -22,9 +22,9 @@ RULES (follow every one):
 3. Reorder or revise bullet points so the most relevant achievements for this specific role appear first.
 4. Keep the resume strictly to ONE page. Project descriptions should be CRISP, using no more than 2-3 highly impactful bullet points per project. Experience bullets must be equally brief and punchy.
 5. Maintain 100% factual accuracy — never invent skills or experience.
-6. ALL OUTPUT MUST BE VALID LATEX text starting with \documentclass and ending with \end{document}. It MUST compile perfectly in Overleaf.
+6. ALL OUTPUT MUST BE VALID LATEX text starting with \\documentclass and ending with \\end{document}. It MUST compile perfectly in Overleaf.
 7. DO NOT wrap your output in markdown code blocks (e.g. ```latex). Output only the raw LaTeX string.
-8. CRITICAL: NEVER leave unescaped special LaTeX characters (like &, %, $, #, or _) in the standard text. Always escape them (e.g., \&, \%, \$).
+8. CRITICAL: NEVER leave unescaped special LaTeX characters (like &, %, $, #, or _) in the standard text. Always escape them (e.g., \\&, \\%, \\$).
 9. Ensure there are no unbalanced braces or environments. Check the LaTeX syntax carefully before outputting.
 
 ===== TARGET LATEX TEMPLATE TO FILL =====
