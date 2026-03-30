@@ -67,7 +67,7 @@ export default function PipelinePage() {
                   {uj.tailored_resume_url ? (
                     <a href={uj.tailored_resume_url} target="_blank" rel="noopener noreferrer"
                       className="text-xs font-medium text-brand-secondary hover:text-brand-primary block mb-3 transition-colors">
-                      View tailored doc ↗
+                      Download tailored LaTeX (.tex) ↓
                     </a>
                   ) : uj.tailored_resume_text && (
                     <button onClick={() => {

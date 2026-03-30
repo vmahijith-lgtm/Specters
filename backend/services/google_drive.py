@@ -1,12 +1,13 @@
 """
-Creates a Google Doc for each tailored resume and returns a shareable URL.
+Creates a Google Drive .tex file for each tailored resume and returns a direct download URL.
 Uses the user's stored OAuth tokens.
 """
 from googleapiclient.discovery import build
+from googleapiclient.http import MediaIoBaseUpload
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from config import settings
-import json
+import io
 
 def _build_creds(tokens: dict) -> Credentials:
     creds = Credentials(
@@ -21,27 +22,35 @@ def _build_creds(tokens: dict) -> Credentials:
     return creds
 
 def create_resume_doc(title: str, content: str, tokens: dict) -> str:
-    """Creates a Google Doc, writes content, makes it publicly readable. Returns share URL."""
+    """Creates a .tex file in Google Drive, makes it publicly readable. Returns a direct download URL."""
     creds = _build_creds(tokens)
-    docs  = build("docs",  "v1", credentials=creds)
     drive = build("drive", "v3", credentials=creds)
 
-    # Create blank doc
-    doc = docs.documents().create(body={"title": title}).execute()
-    doc_id = doc["documentId"]
+    if not title.endswith(".tex"):
+        title += ".tex"
 
-    # Insert text
-    docs.documents().batchUpdate(
-        documentId=doc_id,
-        body={"requests": [{
-            "insertText": {"location": {"index": 1}, "text": content}
-        }]}
+    file_metadata = {
+        "name": title,
+        "mimeType": "application/x-tex"
+    }
+
+    media = MediaIoBaseUpload(
+        io.BytesIO(content.encode("utf-8")), 
+        mimetype="application/x-tex", 
+        resumable=True
+    )
+
+    file = drive.files().create(
+        body=file_metadata, 
+        media_body=media, 
+        fields="id"
     ).execute()
+    file_id = file.get("id")
 
     # Set anyone-with-link can read
     drive.permissions().create(
-        fileId=doc_id,
+        fileId=file_id,
         body={"type": "anyone", "role": "reader"},
     ).execute()
 
-    return f"https://docs.google.com/document/d/{doc_id}/edit"
+    return f"https://drive.google.com/uc?export=download&id={file_id}"
