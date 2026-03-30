@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     google_redirect_uri: str = "http://localhost:8000/auth/google/callback"
     firebase_service_account_path: str = "./firebase-service-account.json"
     cron_secret: str = "change_me"
+    github_token: str = ""
 
     class Config:
         env_file = "../.env"

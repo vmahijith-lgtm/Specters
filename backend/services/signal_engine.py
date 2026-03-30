@@ -8,8 +8,11 @@ import re
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta, timezone
 from typing import Optional
+from config import settings
 
 COMPANY_SPLIT_RE = re.compile(r"[,\n]+")
+
+MIN_ACTIVE_REPOS_FOR_SPIKE = 2
 
 SIGNAL_WEIGHTS = {
     "series_a": 75,
@@ -51,7 +54,7 @@ def normalize_companies(raw_companies) -> list[str]:
     return clean
 
 async def detect_funding_signal(company: str) -> Optional[dict]:
-    """Scrapes TechCrunch RSS for funding news within last 72 hours."""
+    """Scrapes TechCrunch for funding news within the last 30 days."""
     try:
         company = company.strip()
         if not company:
@@ -68,7 +71,7 @@ async def detect_funding_signal(company: str) -> Optional[dict]:
             if r.status_code != 200:
                 return None
             posts = r.json()
-            cutoff = datetime.now(timezone.utc) - timedelta(hours=72)
+            cutoff = datetime.now(timezone.utc) - timedelta(days=30)
             for post in posts:
                 pub = datetime.fromisoformat(post["date"]).replace(tzinfo=timezone.utc)
                 if pub < cutoff:
@@ -94,7 +97,10 @@ async def detect_github_spike(company: str) -> Optional[dict]:
         company = company.strip()
         if not company:
             return None
-        async with httpx.AsyncClient(timeout=10, headers={"Accept": "application/vnd.github.v3+json"}) as client:
+        headers = {"Accept": "application/vnd.github.v3+json"}
+        if settings.github_token:
+            headers["Authorization"] = f"Bearer {settings.github_token}"
+        async with httpx.AsyncClient(timeout=10, headers=headers) as client:
             # Find org
             r = await client.get(
                 "https://api.github.com/search/users",
@@ -118,7 +124,7 @@ async def detect_github_spike(company: str) -> Optional[dict]:
                 if datetime.fromisoformat(repo["pushed_at"].replace("Z", "+00:00")) > cutoff
                 and not repo["fork"]
             ]
-            if len(recent_active) >= 4:
+            if len(recent_active) >= MIN_ACTIVE_REPOS_FOR_SPIKE:
                 return {
                     "company": company,
                     "signal_type": "github_spike",
