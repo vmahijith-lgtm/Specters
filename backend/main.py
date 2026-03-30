@@ -23,7 +23,7 @@ app.add_middleware(
         "https://hiresignal.vercel.app", 
         "https://hire-signal-web.vercel.app"
     ],
-    allow_origin_regex=r"https://.*\.vercel\.app",
+    allow_origin_regex=r"https://.*\.(vercel\.app|up\.railway\.app)",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -5,6 +5,8 @@
   "scripts": {
     "web": "cd apps/web && npm run dev",
     "mobile": "cd apps/mobile && npx expo start",
-    "api": "cd backend && uvicorn main:app --reload --port 8000"
+    "api": "cd backend && uvicorn main:app --reload --port 8000",
+    "build:web": "npm run build -w web",
+    "start:web": "npm run start -w web"
   }
 }
