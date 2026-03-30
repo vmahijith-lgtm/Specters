@@ -18,7 +18,12 @@ app = FastAPI(title="HireSignal API", version="1.0.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://hiresignal.vercel.app"],
+    allow_origins=[
+        "http://localhost:3000", 
+        "https://hiresignal.vercel.app", 
+        "https://hire-signal-web.vercel.app"
+    ],
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
