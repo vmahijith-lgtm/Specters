@@ -16,7 +16,10 @@ export default function RadarScreen() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    mobileApi.getSignals().then(r => { setSignals(r.signals); setLoading(false) })
+    mobileApi.getSignals()
+      .then(r => { setSignals(r.signals) })
+      .catch((e: any) => console.error('Failed to load signals:', e))
+      .finally(() => setLoading(false))
   }, [])
 
   return (

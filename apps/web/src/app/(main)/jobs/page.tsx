@@ -15,8 +15,24 @@ export default function JobsPage() {
   const supabase = createClient()
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }: { data: any }) => setUser(data?.user))
-    api.getJobs({ limit: 30 }).then(r => { setJobs(r.jobs); setLoading(false) })
+    supabase.auth.getUser().then(({ data }: { data: any }) => {
+      const u = data?.user
+      setUser(u)
+      api.getJobs({ limit: 30 })
+        .then(r => {
+          setJobs(r.jobs)
+          if (r.jobs.length === 0 && u) {
+            setScanning(true)
+            api.scanJobs(u.id)
+              .then(() => api.getJobs({ limit: 30 }))
+              .then(r2 => setJobs(r2.jobs))
+              .catch((e: any) => console.error('Auto-scan failed:', e))
+              .finally(() => setScanning(false))
+          }
+        })
+        .catch((e: any) => console.error('Failed to load jobs:', e))
+        .finally(() => setLoading(false))
+    })
   }, [])
 
   const filtered = jobs.filter(j =>
