@@ -81,7 +81,7 @@ async def call_llm(prompt: str, provider: LLMProvider, api_key: str, max_tokens:
     elif provider == "gemini":
         import google.generativeai as genai
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        model = genai.GenerativeModel("gemini-2.5-flash")
         resp = await model.generate_content_async(prompt)
         return resp.text.strip()
 
