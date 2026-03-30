@@ -13,7 +13,7 @@ export default function JobsScreen() {
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUser(data.user))
     mobileApi.getJobs(20)
-      .then(r => { setJobs(r.jobs) })
+      .then(r => { setJobs(r.jobs || []) })
       .catch((e: any) => console.error('Failed to load jobs:', e))
       .finally(() => setLoading(false))
   }, [])
