@@ -15,8 +15,35 @@ export default function JobsPage() {
   const supabase = createClient()
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }: { data: any }) => setUser(data?.user))
-    api.getJobs({ limit: 30 }).then(r => { setJobs(r.jobs); setLoading(false) })
+    async function init() {
+      try {
+        const { data } = await supabase.auth.getUser()
+        const u = data?.user
+        setUser(u)
+        const r = await api.getJobs({ limit: 30 })
+        const loadedJobs = r.jobs || []
+        setJobs(loadedJobs)
+        setLoading(false)
+        // Auto-scan if the user is logged in but no cached jobs exist yet
+        if (u && loadedJobs.length === 0) {
+          setScanning(true)
+          try {
+            await api.scanJobs(u.id)
+            const r2 = await api.getJobs({ limit: 30 })
+            setJobs(r2.jobs || [])
+          } catch (e) {
+            console.error('[jobs] auto-scan failed:', e)
+            // scan failed – user can retry manually
+          } finally {
+            setScanning(false)
+          }
+        }
+      } catch (e) {
+        console.error('[jobs] init failed:', e)
+        setLoading(false)
+      }
+    }
+    init()
   }, [])
 
   const filtered = jobs.filter(j =>

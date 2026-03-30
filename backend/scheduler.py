@@ -19,7 +19,8 @@ def start_scheduler():
         signal_scan_task, "interval", hours=4, id="signal_scan",
         next_run_time=datetime.now(timezone.utc),
     )
-    scheduler.add_job(daily_job_hunt_task, "cron", hour=7, minute=0, id="daily_digest")
+    scheduler.add_job(daily_job_hunt_task, "cron", hour=7, minute=0, id="daily_digest",
+                      next_run_time=datetime.now(timezone.utc))
     scheduler.start()
     print("[scheduler] started")
 
