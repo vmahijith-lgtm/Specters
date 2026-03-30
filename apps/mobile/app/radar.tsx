@@ -3,12 +3,12 @@ import { useEffect, useState } from 'react'
 import { mobileApi } from '../lib/api'
 
 const TYPE_LABELS: Record<string, string> = {
-  funding_round:    '💰 Funding round',
+  funding_round: '💰 Funding round',
   headcount_growth: '📈 Team growth',
-  github_spike:     '⚡ GitHub spike',
+  github_spike: '⚡ GitHub spike',
   glassdoor_review: '⭐ Glassdoor surge',
-  exec_hire:        '👔 Exec hire',
-  product_launch:   '🚀 Product launch',
+  exec_hire: '👔 Exec hire',
+  product_launch: '🚀 Product launch',
 }
 
 export default function RadarScreen() {
@@ -58,23 +58,23 @@ export default function RadarScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F9FAFB' },
-  content:   { padding: 20, paddingTop: 60 },
-  heading:   { fontSize: 24, fontWeight: '600', color: '#111827' },
-  sub:       { fontSize: 14, color: '#6B7280', marginTop: 4, marginBottom: 20 },
-  empty:     { fontSize: 14, color: '#9CA3AF' },
-  card:      { backgroundColor: '#fff', borderRadius: 16, padding: 14, marginBottom: 12, borderWidth: 1, borderColor: '#F3F4F6' },
-  cardRow:   { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 },
+  content: { padding: 20, paddingTop: 60 },
+  heading: { fontSize: 24, fontWeight: '600', color: '#111827' },
+  sub: { fontSize: 14, color: '#6B7280', marginTop: 4, marginBottom: 20 },
+  empty: { fontSize: 14, color: '#9CA3AF' },
+  card: { backgroundColor: '#fff', borderRadius: 16, padding: 14, marginBottom: 12, borderWidth: 1, borderColor: '#F3F4F6' },
+  cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 },
   cardTitle: { fontSize: 16, fontWeight: '600', color: '#111827', flex: 1 },
-  cardSub:   { fontSize: 13, color: '#4B5563', marginBottom: 4 },
-  headline:  { fontSize: 12, color: '#9CA3AF' },
-  badge:     { borderRadius: 999, paddingHorizontal: 8, paddingVertical: 3 },
-  badgeLow:  { backgroundColor: '#DBEAFE' },
+  cardSub: { fontSize: 13, color: '#4B5563', marginBottom: 4 },
+  headline: { fontSize: 12, color: '#9CA3AF' },
+  badge: { borderRadius: 999, paddingHorizontal: 8, paddingVertical: 3 },
+  badgeLow: { backgroundColor: '#DBEAFE' },
   badgeMedium: { backgroundColor: '#FEF3C7' },
   badgeHigh: { backgroundColor: '#FEE2E2' },
   badgeText: { fontSize: 11, fontWeight: '600' },
   badgeTextLow: { color: '#1D4ED8' },
   badgeTextMedium: { color: '#B45309' },
   badgeTextHigh: { color: '#B91C1C' },
-  linkBtn:   { marginTop: 10, alignSelf: 'flex-start' },
-  linkText:  { fontSize: 13, color: '#7C3AED', fontWeight: '500' }
+  linkBtn: { marginTop: 10, alignSelf: 'flex-start' },
+  linkText: { fontSize: 13, color: '#7C3AED', fontWeight: '500' }
 })

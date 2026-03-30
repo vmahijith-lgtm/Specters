@@ -23,7 +23,7 @@ export default function JobsPage() {
         const r = await api.getJobs({ limit: 30 })
         const loadedJobs = r.jobs || []
         setJobs(loadedJobs)
-        
+
         // Auto-scan if the user is logged in but no cached jobs exist yet
         if (u && loadedJobs.length === 0) {
           setScanning(true)
