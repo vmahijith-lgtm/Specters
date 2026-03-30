@@ -15,6 +15,11 @@ export const api = {
     return apiFetch(`/jobs?${qs}`)
   },
   getJob: (id: string) => apiFetch(`/jobs/${id}`),
+  scanJobs: (userId: string) =>
+    apiFetch(`/jobs/scan`, {
+      method: 'POST',
+      body: JSON.stringify({ user_id: userId }),
+    }),
   getSignals: (minScore = 0, companies?: string[]) => {
     const qs = new URLSearchParams({ min_score: String(minScore) })
     if (companies && companies.length > 0) qs.set('companies', companies.join(','))
