@@ -57,7 +57,7 @@ export default function JobsPage() {
     try {
       const r = await api.tailorResume(jobId, user.id, true)
       if (r.doc_url) window.open(r.doc_url, '_blank')
-      else router.push('/resume')
+      else router.push('/pipeline')
     } catch (e: any) {
       alert(e.message || 'Tailoring failed. Check your settings.')
     }
