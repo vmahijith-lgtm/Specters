@@ -35,8 +35,9 @@ async def tailor(req: TailorRequest):
     api_key  = profile["llm_api_key"]
 
     # Tailor
+    job_desc = job.get("description") or f"Job Title: {job.get('title', '')}\nCompany: {job.get('company', '')}"
     tailored_text, keywords = await tailor_resume(
-        job_description=job.get("description", ""),
+        job_description=job_desc,
         base_resume=profile["base_resume"],
         provider=provider,
         api_key=api_key,
@@ -44,7 +45,7 @@ async def tailor(req: TailorRequest):
 
     # Score
     score = await score_application(
-        job_description=job.get("description", ""),
+        job_description=job_desc,
         resume=tailored_text,
         provider=provider,
         api_key=api_key,
