@@ -1,7 +1,10 @@
 {
   "name": "hiresignal",
   "private": true,
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "web": "cd apps/web && npm run dev",
     "mobile": "cd apps/mobile && npx expo start",
