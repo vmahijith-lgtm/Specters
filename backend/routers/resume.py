@@ -2,7 +2,6 @@ from fastapi import APIRouter, HTTPException, Header
 from pydantic import BaseModel
 from database import supabase
 from services.ai_pipeline import tailor_resume, score_application
-from services.google_drive import create_resume_doc
 from typing import Optional
 
 router = APIRouter()
@@ -10,7 +9,7 @@ router = APIRouter()
 class TailorRequest(BaseModel):
     job_id: str
     user_id: str
-    create_doc: bool = True
+    create_doc: bool = False
 
 @router.post("/tailor")
 async def tailor(req: TailorRequest):
@@ -51,17 +50,7 @@ async def tailor(req: TailorRequest):
         api_key=api_key,
     )
 
-    # Create Google Doc
     doc_url: Optional[str] = None
-    if req.create_doc and profile.get("google_tokens"):
-        try:
-            doc_url = create_resume_doc(
-                title=f"Resume — {job['title']} at {job['company']}",
-                content=tailored_text,
-                tokens=profile["google_tokens"],
-            )
-        except Exception as e:
-            print(f"[resume] Drive doc failed: {e}")
 
     # Save to user_jobs
     supabase.table("user_jobs").upsert({

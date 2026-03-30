@@ -64,24 +64,11 @@ export default function PipelinePage() {
                     </div>
                   )}
 
-                  {uj.tailored_resume_url ? (
-                    <a href={uj.tailored_resume_url} target="_blank" rel="noopener noreferrer"
+                  {uj.tailored_resume_text && (
+                    <a href="/resume"
                       className="text-xs font-medium text-brand-secondary hover:text-brand-primary block mb-3 transition-colors">
-                      Download tailored LaTeX (.tex) ↓
+                      View tailored LaTeX in Lab ↗
                     </a>
-                  ) : uj.tailored_resume_text && (
-                    <button onClick={() => {
-                      const blob = new Blob([uj.tailored_resume_text], { type: 'text/plain' });
-                      const url = URL.createObjectURL(blob);
-                      const a = document.createElement('a');
-                      a.href = url;
-                      a.download = `Tailored_Resume_${uj.jobs?.company || 'Job'}.tex`;
-                      a.click();
-                      URL.revokeObjectURL(url);
-                    }}
-                      className="text-xs font-medium text-brand-secondary hover:text-brand-primary block mb-3 transition-colors text-left">
-                      Download tailored LaTeX (.tex) ↓
-                    </button>
                   )}
 
                   <div className="pt-4 mt-2 border-t border-brand-border/50 flex flex-wrap gap-2">
