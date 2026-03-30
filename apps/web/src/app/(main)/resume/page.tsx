@@ -11,7 +11,7 @@ export default function ResumePage() {
   const [tailoredResumes, setTailoredResumes] = useState<any[]>([])
   const [selectedResumeId, setSelectedResumeId] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
-  
+
   const supabase = createClient()
 
   useEffect(() => {
@@ -25,8 +25,8 @@ export default function ResumePage() {
           .select('id, tailored_resume_text, jobs(title, company)')
           .eq('user_id', res.data.user.id)
           .not('tailored_resume_text', 'is', null)
-          .then(({ data }: any) => { 
-            if (data) setTailoredResumes(data) 
+          .then(({ data }: any) => {
+            if (data) setTailoredResumes(data)
           })
       }
     })
@@ -115,7 +115,7 @@ export default function ResumePage() {
         <h2 className="text-2xl font-semibold mb-6 flex items-center gap-3 text-brand-text">
           Generated Tailored Resumes <span className="opacity-80">⚛️</span>
         </h2>
-        
+
         {tailoredResumes.length === 0 ? (
           <div className="text-center p-10 border-2 border-dashed border-brand-border/50 rounded-2xl">
             <p className="text-brand-text-muted font-medium">You haven't tailored any resumes yet. Start tailoring from the Jobs page!</p>
@@ -127,11 +127,10 @@ export default function ResumePage() {
                 <button
                   key={r.id}
                   onClick={() => setSelectedResumeId(r.id)}
-                  className={`w-full text-left p-4 rounded-2xl border transition-all ${
-                    selectedResumeId === r.id 
-                      ? 'bg-brand-primary/10 border-brand-primary text-brand-primary shadow-[0_0_15px_rgba(204,151,255,0.15)]' 
+                  className={`w-full text-left p-4 rounded-2xl border transition-all ${selectedResumeId === r.id
+                      ? 'bg-brand-primary/10 border-brand-primary text-brand-primary shadow-[0_0_15px_rgba(204,151,255,0.15)]'
                       : 'bg-brand-surface-low border-brand-border text-brand-text-muted hover:border-brand-primary/50'
-                  }`}
+                    }`}
                 >
                   <p className="font-bold truncate text-sm mb-1">{r.jobs?.company || 'Unknown Company'}</p>
                   <p className="text-xs opacity-70 truncate">{r.jobs?.title || 'Unknown Role'}</p>
