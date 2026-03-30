@@ -113,15 +113,21 @@ async def tailor_resume(
     ).replace(
         "[RESUME_PLACEHOLDER]", base_resume
     )
-    tailored = await call_llm(prompt, provider, api_key, max_tokens=3000)
+    tailored = await call_llm(prompt, provider, api_key, max_tokens=6000)
 
-    # Clean up any potential markdown code blocks the AI might still add
-    if tailored.startswith("```latex"):
-        tailored = tailored[len("```latex"):].strip()
-    if tailored.startswith("```"):
-        tailored = tailored[3:].strip()
-    if tailored.endswith("```"):
-        tailored = tailored[:-3].strip()
+    # Safely extract ONLY the LaTeX code, dropping any markdown blocks or conversational AI text
+    import re
+    match = re.search(r"(\\documentclass.*?\\end\{document\})", tailored, re.DOTALL)
+    if match:
+        tailored = match.group(1).strip()
+    else:
+        # Fallback to basic markdown stripping if parsing fails
+        if tailored.startswith("```latex"):
+            tailored = tailored[len("```latex"):].strip()
+        if tailored.startswith("```"):
+            tailored = tailored[3:].strip()
+        if tailored.endswith("```"):
+            tailored = tailored[:-3].strip()
 
     # Extract matched keywords (simple overlap check)
     jd_words = set(job_description.lower().split())

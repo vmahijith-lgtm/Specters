@@ -30,6 +30,7 @@ export default function ResumePage() {
           })
       }
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   async function saveResume() {
