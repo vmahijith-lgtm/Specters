@@ -75,12 +75,12 @@ export default function PipelinePage() {
                       const url = URL.createObjectURL(blob);
                       const a = document.createElement('a');
                       a.href = url;
-                      a.download = `Tailored_Resume_${uj.jobs?.company || 'Job'}.txt`;
+                      a.download = `Tailored_Resume_${uj.jobs?.company || 'Job'}.tex`;
                       a.click();
                       URL.revokeObjectURL(url);
                     }}
                       className="text-xs font-medium text-brand-secondary hover:text-brand-primary block mb-3 transition-colors text-left">
-                      Download tailored text ↓
+                      Download tailored LaTeX (.tex) ↓
                     </button>
                   )}
 

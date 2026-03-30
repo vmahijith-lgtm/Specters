@@ -2,30 +2,41 @@
 Provider-agnostic AI pipeline. Uses the user's own API key.
 Supports OpenAI, Anthropic Claude, and Google Gemini.
 """
+import os
 from typing import Literal
 
 LLMProvider = Literal["openai", "anthropic", "gemini"]
 
-TAILOR_PROMPT = """You are a professional resume writer and ATS optimization expert.
+LATEX_TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), "latex_template.tex")
+with open(LATEX_TEMPLATE_PATH, "r") as f:
+    LATEX_TEMPLATE_TEXT = f.read()
+
+TAILOR_PROMPT_TEMPLATE = """You are a professional resume writer and ATS optimization expert.
 
 Rewrite the candidate's resume to closely match the job description language.
+You MUST output your response strictly as valid LaTeX code, using the exact document structure and formatting provided in the template below.
 
 RULES (follow every one):
-1. Mirror terminology exactly — if JD says "program management" use that, not "project management"
-2. Reorder bullet points so most relevant achievements appear first
-3. Trim irrelevant experience to one line, never delete it
-4. Maintain 100% factual accuracy — never invent skills or experience
-5. Use strong action verbs from the job description
-6. Match the seniority level and tone of the JD
-7. Output clean plain text with standard resume sections, no markdown symbols
+1. Mirror terminology exactly — if JD says "program management" use that, not "project management".
+2. Match the fields exactly to the candidate's actual identity, education, and URLs. 
+3. Reorder or revise bullet points so the most relevant achievements for this specific role appear first.
+4. Keep it concise. Ensure content volume fits comfortably on one page.
+5. Maintain 100% factual accuracy — never invent skills or experience.
+6. ALL OUTPUT MUST BE VALID LATEX text starting with \\documentclass and ending with \\end{document}.
+7. DO NOT wrap your output in markdown code blocks (e.g. ```latex). Output only the raw LaTeX string.
+8. CRITICAL: NEVER leave unescaped special LaTeX characters (like &, %, $, #, or _) in the standard text. Always escape them (e.g., \\&, \\%, \\$).
+
+===== TARGET LATEX TEMPLATE TO FILL =====
+[TEMPLATE_PLACEHOLDER]
+=========================================
 
 JOB DESCRIPTION:
-{job_description}
+[JD_PLACEHOLDER]
 
 CANDIDATE RESUME:
-{base_resume}
+[RESUME_PLACEHOLDER]
 
-TAILORED RESUME:"""
+YOUR TAILORED RAW LATEX CODE:"""
 
 OUTREACH_PROMPT = """You are an expert at writing concise, personable LinkedIn direct messages
 to hiring managers. Write a message that:
@@ -94,10 +105,22 @@ async def tailor_resume(
     api_key: str,
 ) -> tuple[str, list[str]]:
     """Returns (tailored_resume_text, keywords_matched)."""
-    prompt = TAILOR_PROMPT.format(
-        job_description=job_description, base_resume=base_resume
+    prompt = TAILOR_PROMPT_TEMPLATE.replace(
+        "[TEMPLATE_PLACEHOLDER]", LATEX_TEMPLATE_TEXT
+    ).replace(
+        "[JD_PLACEHOLDER]", job_description
+    ).replace(
+        "[RESUME_PLACEHOLDER]", base_resume
     )
-    tailored = await call_llm(prompt, provider, api_key, max_tokens=2500)
+    tailored = await call_llm(prompt, provider, api_key, max_tokens=3000)
+
+    # Clean up any potential markdown code blocks the AI might still add
+    if tailored.startswith("```latex"):
+        tailored = tailored[len("```latex"):].strip()
+    if tailored.startswith("```"):
+        tailored = tailored[3:].strip()
+    if tailored.endswith("```"):
+        tailored = tailored[:-3].strip()
 
     # Extract matched keywords (simple overlap check)
     jd_words = set(job_description.lower().split())
