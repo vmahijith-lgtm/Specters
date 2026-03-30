@@ -14,3 +14,21 @@ export function createClient() {
 
   return globalForSupabase.__hs_supabase_client__
 }
+
+// Deduplicate concurrent user fetches to prevent Supabase lock stealing
+let userPromise: Promise<any> | null = null;
+let lastUserFetchTime = 0;
+
+export function getCachedUser(): Promise<any> {
+  const now = Date.now()
+  if (userPromise && (now - lastUserFetchTime < 2000)) {
+    return userPromise;
+  }
+  const client = createClient()
+  userPromise = client.auth.getUser().catch((err: any) => {
+    userPromise = null;
+    throw err;
+  });
+  lastUserFetchTime = now;
+  return userPromise as Promise<any>;
+}

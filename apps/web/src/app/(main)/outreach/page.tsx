@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { createClient } from '@/lib/supabase'
+import { createClient, getCachedUser } from '@/lib/supabase'
 import { api } from '@/lib/api'
 import type { HiringManager } from '@hiresignal/shared'
 
@@ -27,7 +27,7 @@ export default function OutreachPage() {
   const supabase = createClient()
 
   useEffect(() => {
-    supabase.auth.getUser().then((res: any) => setUser(res.data?.user))
+    getCachedUser().then((res: any) => setUser(res.data?.user))
     api.getJobs({ limit: 50 }).then(r => setJobs(r.jobs))
   }, [])
 
@@ -157,8 +157,8 @@ export default function OutreachPage() {
                       <div
                         key={m.id}
                         className={`flex items-center gap-3 p-3 rounded-xl border transition-colors cursor-pointer ${selectedManagerId === m.id
-                            ? 'border-brand-primary bg-brand-primary/10'
-                            : 'border-brand-border bg-black/20 hover:border-brand-primary/50'
+                          ? 'border-brand-primary bg-brand-primary/10'
+                          : 'border-brand-border bg-black/20 hover:border-brand-primary/50'
                           }`}
                         onClick={() => selectManager(m)}>
                         <div className="flex-1 min-w-0">

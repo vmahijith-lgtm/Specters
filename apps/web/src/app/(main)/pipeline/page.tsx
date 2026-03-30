@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase'
+import { createClient, getCachedUser } from '@/lib/supabase'
 import { api } from '@/lib/api'
 
 const COLUMNS = ['saved', 'applied', 'interviewing', 'offer', 'rejected']
@@ -18,7 +18,7 @@ export default function PipelinePage() {
   const supabase = createClient()
 
   useEffect(() => {
-    supabase.auth.getUser().then((res: any) => {
+    getCachedUser().then((res: any) => {
       setUser(res.data?.user)
       if (res.data?.user) {
         api.getPipeline(res.data.user.id).then(setPipeline)
@@ -71,7 +71,7 @@ export default function PipelinePage() {
                     </a>
                   ) : uj.tailored_resume_text && (
                     <button onClick={() => {
-                      const blob = new Blob([uj.tailored_resume_text], {type: 'text/plain'});
+                      const blob = new Blob([uj.tailored_resume_text], { type: 'text/plain' });
                       const url = URL.createObjectURL(blob);
                       const a = document.createElement('a');
                       a.href = url;

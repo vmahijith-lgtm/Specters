@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { api } from '@/lib/api'
-import { createClient } from '@/lib/supabase'
+import { createClient, getCachedUser } from '@/lib/supabase'
 
 const TYPE_LABELS: Record<string, string> = {
   funding_round: '💰 Funding Round',
@@ -23,7 +23,7 @@ export default function RadarPage() {
   useEffect(() => {
     async function load() {
       try {
-        const { data: authData } = await supabase.auth.getUser()
+        const { data: authData } = await getCachedUser()
         let wl: string[] = []
 
         if (authData.user) {

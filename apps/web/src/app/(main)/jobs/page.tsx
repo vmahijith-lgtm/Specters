@@ -1,8 +1,8 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { api } from '@/lib/api'
-import { createClient } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
+import { api } from '@/lib/api'
+import { createClient, getCachedUser } from '@/lib/supabase'
 
 export default function JobsPage() {
   const [jobs, setJobs] = useState<any[]>([])
@@ -17,7 +17,7 @@ export default function JobsPage() {
   useEffect(() => {
     async function init() {
       try {
-        const { data } = await supabase.auth.getUser()
+        const { data } = await getCachedUser()
         const u = data?.user
         setUser(u)
         const r = await api.getJobs({ limit: 30 })

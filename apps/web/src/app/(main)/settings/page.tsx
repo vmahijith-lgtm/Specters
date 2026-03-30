@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { createClient } from '@/lib/supabase'
+import { createClient, getCachedUser } from '@/lib/supabase'
 
 function SettingsContent() {
   const [profile, setProfile] = useState<any>(null)
@@ -18,7 +18,7 @@ function SettingsContent() {
   }, [searchParams])
 
   useEffect(() => {
-    supabase.auth.getUser().then((res: any) => {
+    getCachedUser().then((res: any) => {
       if (res.data?.user) {
         supabase.from('profiles').select('*').eq('id', res.data.user.id).single()
           .then(({ data: p }: any) => setProfile(p))

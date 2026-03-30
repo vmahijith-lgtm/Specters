@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { createClient } from '@/lib/supabase'
+import { createClient, getCachedUser } from '@/lib/supabase'
 import { api } from '@/lib/api'
 
 export default function ResumePage() {
@@ -11,7 +11,7 @@ export default function ResumePage() {
   const supabase = createClient()
 
   useEffect(() => {
-    supabase.auth.getUser().then((res: any) => {
+    getCachedUser().then((res: any) => {
       setUser(res.data?.user)
       if (res.data?.user) {
         supabase.from('profiles').select('base_resume').eq('id', res.data.user.id).single()
