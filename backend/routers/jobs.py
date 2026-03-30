@@ -57,16 +57,41 @@ async def list_jobs(
     offset: int = 0,
     company: Optional[str] = None,
     role: Optional[str] = None,
+    user_id: Optional[str] = None,
 ):
     query = supabase.table("jobs").select("*, signals(*)") \
         .order("posted_at", desc=True) \
-        .range(offset, offset + limit - 1)
+        .limit(200)
+
     if company:
         query = query.ilike("company", f"%{company}%")
     if role:
         query = query.ilike("title", f"%{role}%")
+    
     result = query.execute()
-    return {"jobs": result.data, "total": len(result.data)}
+    jobs_list = result.data
+
+    # If user_id is provided, prioritize target locations dynamically
+    if user_id:
+        profile_req = supabase.table("profiles").select("target_locations").eq("id", user_id).single().execute()
+        if profile_req.data and profile_req.data.get("target_locations"):
+            target_locations = [loc.lower().strip() for loc in profile_req.data["target_locations"]]
+            
+            def is_target_location(job):
+                job_loc = (job.get("location") or "").lower()
+                # Check if any target location is a substring of the job location
+                for tloc in target_locations:
+                    if tloc in job_loc:
+                        return True
+                return False
+
+            # Sort: target locations first, then fallback to original order (which is posted_at desc)
+            jobs_list.sort(key=lambda j: 0 if is_target_location(j) else 1)
+
+    # Manual pagination after sorting
+    paginated_jobs = jobs_list[offset:offset + limit]
+
+    return {"jobs": paginated_jobs, "total": len(jobs_list)}
 
 @router.get("/{job_id}")
 async def get_job(job_id: str):

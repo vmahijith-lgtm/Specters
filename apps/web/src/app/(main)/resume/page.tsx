@@ -129,8 +129,8 @@ export default function ResumePage() {
                   key={r.id}
                   onClick={() => setSelectedResumeId(r.id)}
                   className={`w-full text-left p-4 rounded-2xl border transition-all ${selectedResumeId === r.id
-                      ? 'bg-brand-primary/10 border-brand-primary text-brand-primary shadow-[0_0_15px_rgba(204,151,255,0.15)]'
-                      : 'bg-brand-surface-low border-brand-border text-brand-text-muted hover:border-brand-primary/50'
+                    ? 'bg-brand-primary/10 border-brand-primary text-brand-primary shadow-[0_0_15px_rgba(204,151,255,0.15)]'
+                    : 'bg-brand-surface-low border-brand-border text-brand-text-muted hover:border-brand-primary/50'
                     }`}
                 >
                   <p className="font-bold truncate text-sm mb-1">{r.jobs?.company || 'Unknown Company'}</p>

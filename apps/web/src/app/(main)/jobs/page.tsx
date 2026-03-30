@@ -20,7 +20,7 @@ export default function JobsPage() {
         const { data } = await getCachedUser()
         const u = data?.user
         setUser(u)
-        const r = await api.getJobs({ limit: 30 })
+        const r = await api.getJobs({ limit: 30, user_id: u?.id })
         const loadedJobs = r.jobs || []
         setJobs(loadedJobs)
 
@@ -29,7 +29,7 @@ export default function JobsPage() {
           setScanning(true)
           try {
             await api.scanJobs(u.id)
-            const r2 = await api.getJobs({ limit: 30 })
+            const r2 = await api.getJobs({ limit: 30, user_id: u.id })
             setJobs(r2.jobs || [])
           } catch (e) {
             console.error('[jobs] auto-scan failed:', e)

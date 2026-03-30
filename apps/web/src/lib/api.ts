@@ -10,7 +10,7 @@ async function apiFetch(path: string, options: RequestInit = {}) {
 }
 
 export const api = {
-  getJobs: (params?: { company?: string; role?: string; limit?: number }) => {
+  getJobs: (params?: { company?: string; role?: string; limit?: number; user_id?: string }) => {
     const qs = new URLSearchParams(params as any).toString()
     return apiFetch(`/jobs?${qs}`)
   },
