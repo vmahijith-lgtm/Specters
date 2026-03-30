@@ -22,26 +22,43 @@ export default function RadarPage() {
 
   useEffect(() => {
     async function load() {
-      const { data: authData } = await supabase.auth.getUser()
-      let wl: string[] = []
-
-      if (authData.user) {
-        const { data: p } = await supabase
-          .from('profiles')
-          .select('watchlist')
-          .eq('id', authData.user.id)
-          .single()
-        wl = (p && p.watchlist) || []
-        if (wl.length > 0) {
-          setHasWatchlist(true)
-          setWatchlist(wl)
-        }
-      }
-
       try {
+        const { data: authData } = await supabase.auth.getUser()
+        let wl: string[] = []
+
+        if (authData.user) {
+          const { data: p } = await supabase
+            .from('profiles')
+            .select('watchlist')
+            .eq('id', authData.user.id)
+            .single()
+          wl = (p && p.watchlist) || []
+          if (wl.length > 0) {
+            setHasWatchlist(true)
+            setWatchlist(wl)
+          }
+        }
+
         const r = await api.getSignals(0, wl.length > 0 ? wl : undefined)
-        setSignals(r.signals)
-      } finally {
+        const loadedSignals = r.signals || []
+        setSignals(loadedSignals)
+        setLoading(false)
+
+        // Auto-scan if the user has a watchlist but no signals have been stored yet
+        if (wl.length > 0 && loadedSignals.length === 0) {
+          setScanning(true)
+          try {
+            const scanResult = await api.scanSignals(wl)
+            setSignals(scanResult.signals || [])
+          } catch (e) {
+            console.error('[radar] auto-scan failed:', e)
+            // scan failed – user can retry manually
+          } finally {
+            setScanning(false)
+          }
+        }
+      } catch (e) {
+        console.error('[radar] load failed:', e)
         setLoading(false)
       }
     }

@@ -16,7 +16,9 @@ export default function RadarScreen() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    mobileApi.getSignals().then(r => { setSignals(r.signals); setLoading(false) })
+    mobileApi.getSignals()
+      .then(r => { setSignals(r.signals || []); setLoading(false) })
+      .catch(e => { console.error('[radar] fetch failed:', e); setLoading(false) })
   }, [])
 
   return (
