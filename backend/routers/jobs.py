@@ -73,20 +73,45 @@ async def list_jobs(
 
     # If user_id is provided, prioritize target locations dynamically
     if user_id:
-        profile_req = supabase.table("profiles").select("target_locations").eq("id", user_id).single().execute()
-        if profile_req.data and profile_req.data.get("target_locations"):
-            target_locations = [loc.lower().strip() for loc in profile_req.data["target_locations"]]
+        profile_req = supabase.table("profiles").select("target_locations, target_roles").eq("id", user_id).single().execute()
+        if profile_req.data:
+            target_locations = [loc.lower().strip() for loc in (profile_req.data.get("target_locations") or [])]
+            target_roles = [role.lower().strip() for role in (profile_req.data.get("target_roles") or [])]
             
-            def is_target_location(job):
+            def get_sort_priority(job):
                 job_loc = (job.get("location") or "").lower()
-                # Check if any target location is a substring of the job location
+                job_title = (job.get("title") or "").lower()
+                
+                # Check location match
+                loc_match = False
                 for tloc in target_locations:
                     if tloc in job_loc:
-                        return True
-                return False
+                        loc_match = True
+                        break
+                
+                # Check role match
+                role_match = False
+                for trole in target_roles:
+                    if trole in job_title:
+                        role_match = True
+                        break
+                        
+                # Priority: 
+                # 0 = Both Loc & Role match
+                # 1 = Location match only
+                # 2 = Role match only
+                # 3 = Neither (fallback to default date order)
+                if loc_match and role_match:
+                    return 0
+                elif loc_match:
+                    return 1
+                elif role_match:
+                    return 2
+                else:
+                    return 3
 
-            # Sort: target locations first, then fallback to original order (which is posted_at desc)
-            jobs_list.sort(key=lambda j: 0 if is_target_location(j) else 1)
+            # Sort by priority (0 first), if priorities tie, it preserves original fetch order (posted_at desc)
+            jobs_list.sort(key=get_sort_priority)
 
     # Manual pagination after sorting
     paginated_jobs = jobs_list[offset:offset + limit]
