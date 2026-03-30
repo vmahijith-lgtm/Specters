@@ -42,7 +42,6 @@ export default function RadarPage() {
         const r = await api.getSignals(0, wl.length > 0 ? wl : undefined)
         const loadedSignals = r.signals || []
         setSignals(loadedSignals)
-        setLoading(false)
 
         // Auto-scan if the user has a watchlist but no signals have been stored yet
         if (wl.length > 0 && loadedSignals.length === 0) {
@@ -52,13 +51,13 @@ export default function RadarPage() {
             setSignals(scanResult.signals || [])
           } catch (e) {
             console.error('[radar] auto-scan failed:', e)
-            // scan failed – user can retry manually
           } finally {
             setScanning(false)
           }
         }
       } catch (e) {
         console.error('[radar] load failed:', e)
+      } finally {
         setLoading(false)
       }
     }

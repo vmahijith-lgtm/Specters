@@ -13,8 +13,9 @@ export default function JobsScreen() {
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUser(data.user))
     mobileApi.getJobs(20)
-      .then(r => { setJobs(r.jobs || []); setLoading(false) })
-      .catch(e => { console.error('[jobs] fetch failed:', e); setLoading(false) })
+      .then(r => { setJobs(r.jobs || []) })
+      .catch((e: any) => console.error('Failed to load jobs:', e))
+      .finally(() => setLoading(false))
   }, [])
 
   const filtered = jobs.filter(j =>

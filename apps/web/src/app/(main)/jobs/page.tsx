@@ -23,7 +23,7 @@ export default function JobsPage() {
         const r = await api.getJobs({ limit: 30 })
         const loadedJobs = r.jobs || []
         setJobs(loadedJobs)
-        setLoading(false)
+        
         // Auto-scan if the user is logged in but no cached jobs exist yet
         if (u && loadedJobs.length === 0) {
           setScanning(true)
@@ -33,13 +33,13 @@ export default function JobsPage() {
             setJobs(r2.jobs || [])
           } catch (e) {
             console.error('[jobs] auto-scan failed:', e)
-            // scan failed – user can retry manually
           } finally {
             setScanning(false)
           }
         }
       } catch (e) {
         console.error('[jobs] init failed:', e)
+      } finally {
         setLoading(false)
       }
     }
