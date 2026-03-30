@@ -90,7 +90,7 @@ export default function JobsPage() {
         <div className="glass-card rounded-3xl p-10 text-center max-w-lg mx-auto mt-12">
           <p className="text-brand-text-muted text-lg">No matches found.</p>
           <p className="text-sm mt-2 text-brand-text-muted/60">Try adjusting your search or scan the network for fresh matches.</p>
-          
+
           <button
             onClick={handleScanJobs}
             disabled={scanning}
