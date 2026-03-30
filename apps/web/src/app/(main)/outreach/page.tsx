@@ -163,9 +163,11 @@ export default function OutreachPage() {
                         onClick={() => selectManager(m)}>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-semibold text-brand-text truncate">
-                            {m.name ?? <span className="italic text-brand-text-muted">Unknown name</span>}
+                            {m.name ? m.name : <span className="italic text-brand-primary">Manual Search Required</span>}
                           </p>
-                          <p className="text-xs text-brand-text-muted truncate">{m.title} · {m.company}</p>
+                          <p className="text-xs text-brand-text-muted truncate">
+                            {m.name ? `${m.title} · ${m.company}` : `Find ${m.title} at ${m.company}`}
+                          </p>
                         </div>
                         {m.linkedin_url && (
                           <a
