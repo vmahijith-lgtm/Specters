@@ -23,7 +23,13 @@ async def list_signals(
     if companies:
         company_list = normalize_companies(companies)
         if company_list:
-            query = query.in_("company", company_list)
+            # Use quoted ilike values to safely handle company names with special
+            # characters. Double quotes are escaped by doubling them ("").
+            def _q(name: str) -> str:
+                return name.replace('"', '""')
+
+            or_str = ",".join(f'company.ilike."{_q(c)}"' for c in company_list)
+            query = query.or_(or_str)
     result = query.execute()
     return {"signals": result.data}
 
