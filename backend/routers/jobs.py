@@ -82,12 +82,15 @@ async def list_jobs(
                 job_loc = (job.get("location") or "").lower()
                 job_title = (job.get("title") or "").lower()
                 
-                # Check location match
+                # Check location match (automatically pass if role is Remote)
                 loc_match = False
-                for tloc in target_locations:
-                    if tloc in job_loc:
-                        loc_match = True
-                        break
+                if "remote" in job_loc:
+                    loc_match = True
+                else:
+                    for tloc in target_locations:
+                        if tloc in job_loc:
+                            loc_match = True
+                            break
                 
                 # Check role match
                 role_match = False
