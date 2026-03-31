@@ -8,7 +8,8 @@ export default async function DashboardPage() {
     redirect('/login')
   }
   const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
-  const { data: signals } = await supabase.from('signals').select('*').order('signal_score', { ascending: false }).limit(3)
+  // Fetch the most recent signals, not highest score of all time
+  const { data: signals } = await supabase.from('signals').select('*').order('detected_at', { ascending: false }).limit(3)
   const { data: userJobs } = await supabase.from('user_jobs').select('*, jobs(*)').eq('user_id', user.id).limit(5)
 
   const statusCounts = (userJobs || []).reduce((acc: any, uj: any) => {
@@ -18,8 +19,8 @@ export default async function DashboardPage() {
 
   let displayName = ''
   if (profile?.full_name) {
-    displayName = profile.full_name.includes('@') 
-      ? profile.full_name.split('@')[0] 
+    displayName = profile.full_name.includes('@')
+      ? profile.full_name.split('@')[0]
       : profile.full_name.split(' ')[0]
   } else if (user.email) {
     displayName = user.email.split('@')[0]
@@ -37,15 +38,15 @@ export default async function DashboardPage() {
       {/* Stats */}
       <div className="grid grid-cols-4 gap-6 mb-12">
         {[
-          { label: 'Saved',        value: statusCounts['saved'] || 0,        accent: 'from-blue-500 to-blue-600', shadow: 'shadow-blue-500/20' },
-          { label: 'Applied',      value: statusCounts['applied'] || 0,      accent: 'from-brand-secondary to-brand-secondary-dim', shadow: 'shadow-brand-secondary/20' },
+          { label: 'Saved', value: statusCounts['saved'] || 0, accent: 'from-blue-500 to-blue-600', shadow: 'shadow-blue-500/20' },
+          { label: 'Applied', value: statusCounts['applied'] || 0, accent: 'from-brand-secondary to-brand-secondary-dim', shadow: 'shadow-brand-secondary/20' },
           { label: 'Interviewing', value: statusCounts['interviewing'] || 0, accent: 'from-amber-400 to-amber-600', shadow: 'shadow-amber-500/20' },
-          { label: 'Offers',       value: statusCounts['offer'] || 0,        accent: 'from-emerald-400 to-emerald-600', shadow: 'shadow-emerald-500/20' },
+          { label: 'Offers', value: statusCounts['offer'] || 0, accent: 'from-emerald-400 to-emerald-600', shadow: 'shadow-emerald-500/20' },
         ].map(({ label, value, accent, shadow }) => (
           <div key={label} className="solid-card rounded-3xl p-6 relative overflow-hidden group transition-all duration-300 hover:scale-[1.02] hover:bg-brand-surface-highest">
             <div className={`absolute -inset-0 bg-gradient-to-br ${accent} opacity-0 group-hover:opacity-[0.03] transition-opacity duration-300`} />
             <div className={`w-12 h-12 rounded-2xl mb-4 bg-gradient-to-br ${accent} flex items-center justify-center text-white/90 shadow-lg ${shadow}`}>
-               <span className="font-bold text-xl">{value}</span>
+              <span className="font-bold text-xl">{value}</span>
             </div>
             <p className="text-3xl font-bold text-brand-text mb-1">{value}</p>
             <p className="text-sm font-medium text-brand-text-muted uppercase tracking-wider">{label}</p>
