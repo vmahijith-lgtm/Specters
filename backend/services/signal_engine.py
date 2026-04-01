@@ -72,18 +72,29 @@ async def detect_funding_signal(company: str) -> Optional[dict]:
                 return None
             posts = r.json()
             cutoff = datetime.now(timezone.utc) - timedelta(days=30)
+            
+            # Ensure the company name is actually mentioned in the text
+            pattern = re.compile(r'\b' + re.escape(company) + r'\b', re.IGNORECASE)
+            
             for post in posts:
                 pub = datetime.fromisoformat(post["date"]).replace(tzinfo=timezone.utc)
                 if pub < cutoff:
                     continue
-                text = BeautifulSoup(post["excerpt"]["rendered"], "html.parser").get_text()
-                series = _extract_series(text)
+                
+                title_text = BeautifulSoup(post["title"]["rendered"], "html.parser").get_text()
+                excerpt_text = BeautifulSoup(post["excerpt"]["rendered"], "html.parser").get_text()
+                
+                # Verify company is actually in the title or excerpt before assuming it's a match
+                if not (pattern.search(title_text) or pattern.search(excerpt_text)):
+                    continue
+                    
+                series = _extract_series(excerpt_text)
                 score = SIGNAL_WEIGHTS.get(f"series_{series.lower()}", 60)
                 return {
                     "company": company,
                     "signal_type": "funding_round",
                     "signal_score": score,
-                    "headline": post["title"]["rendered"],
+                    "headline": title_text,
                     "source_url": post["link"],
                     "raw_data": {"series": series, "date": post["date"]},
                 }
