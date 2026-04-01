@@ -14,14 +14,16 @@ async def lifespan(app: FastAPI):
     yield
     shutdown_scheduler()
 
-app = FastAPI(title="HireSignal API", version="1.0.0", lifespan=lifespan)
+app = FastAPI(title="Specters API", version="1.0.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000", 
         "https://hiresignal.vercel.app", 
-        "https://hire-signal-web.vercel.app"
+        "https://hire-signal-web.vercel.app",
+        "https://specters.works",
+        "https://www.specters.works"
     ],
     allow_origin_regex=r"https://.*\.(vercel\.app|up\.railway\.app)",
     allow_credentials=True,

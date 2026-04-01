@@ -40,7 +40,7 @@ def send_daily_digest(to_email: str, jobs: list[dict], signals: list[dict]):
     html = f"""
     <div style="font-family:system-ui,sans-serif;max-width:600px;margin:0 auto;color:#111;">
       <h1 style="font-size:20px;font-weight:600;margin-bottom:4px;">
-        Your daily HireSignal briefing
+        Your daily Specters briefing
       </h1>
       <p style="color:#6b7280;margin-top:0;">
         {len(signals)} hiring signals · {len(jobs)} fresh listings
@@ -52,18 +52,18 @@ def send_daily_digest(to_email: str, jobs: list[dict], signals: list[dict]):
       {jobs_html}
 
       <div style="margin-top:24px;padding-top:16px;border-top:1px solid #e5e7eb;">
-        <a href="https://hiresignal.vercel.app/dashboard"
+        <a href="https://specters.works/dashboard"
            style="background:#7c3aed;color:#fff;padding:10px 20px;border-radius:8px;
                   text-decoration:none;font-weight:500;">
-          Open HireSignal →
+          Open Specters →
         </a>
       </div>
     </div>
     """
 
     resend.Emails.send({
-        "from":    "HireSignal <digest@hiresignal.com>",
+        "from":    "Specters <digest@specters.works>",
         "to":      [to_email],
-        "subject": f"HireSignal: {len(signals)} signals · {len(jobs)} new jobs today",
+        "subject": f"Specters: {len(signals)} signals · {len(jobs)} new jobs today",
         "html":    html,
     })
