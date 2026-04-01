@@ -6,7 +6,7 @@ const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-space
 const manrope = Manrope({ subsets: ['latin'], variable: '--font-manrope' })
 
 export const metadata: Metadata = {
-  title: 'HireSignal — Find jobs before they go live',
+  title: 'Specters — Find jobs before they go live',
   description: 'Predictive job intelligence. Hiring signals 48 hours before listing.',
 }
 
@@ -15,6 +15,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={`${spaceGrotesk.variable} ${manrope.variable} antialiased`}>
         {children}
+        <div className="fixed bottom-2 right-4 text-xs font-body text-brand-text-muted/40 select-none pointer-events-none z-[100]">
+          Mahi
+        </div>
       </body>
     </html>
   )

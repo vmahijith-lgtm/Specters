@@ -42,7 +42,7 @@ export default function LandingPage() {
         {/* Navigation / Header */}
         <nav className="absolute top-0 w-full flex justify-between items-center py-6 px-8 z-50 transition-all duration-[800ms] " style={{ transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)' }}>
           <div className="text-2xl font-bold tracking-tighter text-brand-primary font-display">
-            HireSignal<span className="text-brand-text">.</span>
+            Specters<span className="text-brand-text">.</span>
           </div>
           <div className="flex gap-4">
             <Link href="/login" className="px-6 py-2.5 rounded-full bg-brand-surface-highest/60 backdrop-blur-xl text-sm font-medium border border-brand-border shadow-md hover:bg-brand-surface-highest transition-all duration-300">

@@ -6,13 +6,13 @@ import Link from 'next/link'
 
 export default function LoginPage() {
   const [isSignUp, setIsSignUp] = useState(false)
-  const [name, setName]       = useState('')
-  const [email, setEmail]     = useState('')
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [loading, setLoading]   = useState(false)
+  const [loading, setLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
   const supabase = createClient()
-  const router   = useRouter()
+  const router = useRouter()
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -41,10 +41,10 @@ export default function LoginPage() {
         if (data.user) {
           const { error: profileError } = await supabase.from('profiles').upsert(
             { id: data.user.id, full_name: name },
-            { onConflict: 'id', ignoreDuplicates: false } 
+            { onConflict: 'id', ignoreDuplicates: false }
           )
           if (profileError) {
-             console.error("Profile Error:", profileError)
+            console.error("Profile Error:", profileError)
           }
         }
         router.push('/dashboard')
@@ -72,17 +72,17 @@ export default function LoginPage() {
       <div className="glass-card rounded-[2rem] p-10 w-full max-w-md shadow-2xl relative z-10 ambient-glow">
         <div className="flex items-center justify-center gap-3 mb-10">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--color-brand-primary)] to-[var(--color-brand-primary-dim)] flex items-center justify-center shadow-[0_0_20px_rgba(204,151,255,0.4)]">
-            <span className="text-[#1a0033] font-bold text-lg font-display tracking-tight">H</span>
+            <span className="text-[#1a0033] font-bold text-lg font-display tracking-tight">S</span>
           </div>
-          <span className="font-semibold text-2xl font-display text-[var(--color-brand-text)] tracking-tight">HireSignal</span>
+          <span className="font-semibold text-2xl font-display text-[var(--color-brand-text)] tracking-tight">Specters</span>
         </div>
 
         <h1 className="text-3xl font-display font-medium mb-2 text-center text-[var(--color-brand-text)] tracking-tight">
           {isSignUp ? 'Initiate Session' : 'Authenticate'}
         </h1>
         <p className="text-[var(--color-brand-text-muted)] text-center text-sm mb-8 leading-relaxed">
-          {isSignUp 
-            ? 'Access predictive job intelligence. Create your profile.' 
+          {isSignUp
+            ? 'Access predictive job intelligence. Create your profile.'
             : 'Access the command center. Find your next role.'}
         </p>
 
@@ -149,7 +149,7 @@ export default function LoginPage() {
         <div className="mt-8 pt-6 border-t border-[var(--color-brand-border)]">
           <p className="text-center text-sm text-[var(--color-brand-text-muted)]">
             {isSignUp ? 'Already have access? ' : 'Need clearance? '}
-            <button 
+            <button
               type="button"
               onClick={() => {
                 setIsSignUp(!isSignUp)

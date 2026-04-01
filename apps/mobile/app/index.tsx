@@ -5,7 +5,7 @@ import { mobileApi } from '../lib/api'
 
 export default function DashboardScreen() {
   const [signals, setSignals] = useState<any[]>([])
-  const [jobs, setJobs]       = useState<any[]>([])
+  const [jobs, setJobs] = useState<any[]>([])
   const [profile, setProfile] = useState<any>(null)
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export default function DashboardScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.heading}>HireSignal 📡</Text>
+      <Text style={styles.heading}>Specters 📡</Text>
       <Text style={styles.sub}>Your hiring intelligence briefing</Text>
 
       {signals.length > 0 && (
@@ -55,15 +55,15 @@ export default function DashboardScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F9FAFB' },
-  content:   { padding: 20, paddingTop: 60 },
-  heading:   { fontSize: 24, fontWeight: '600', color: '#111827' },
-  sub:       { fontSize: 14, color: '#6B7280', marginTop: 4, marginBottom: 20 },
-  section:   { marginBottom: 24 },
+  content: { padding: 20, paddingTop: 60 },
+  heading: { fontSize: 24, fontWeight: '600', color: '#111827' },
+  sub: { fontSize: 14, color: '#6B7280', marginTop: 4, marginBottom: 20 },
+  section: { marginBottom: 24 },
   sectionTitle: { fontSize: 14, fontWeight: '600', color: '#374151', marginBottom: 10, textTransform: 'uppercase', letterSpacing: 0.5 },
-  card:      { backgroundColor: '#fff', borderRadius: 16, padding: 14, marginBottom: 8, borderWidth: 1, borderColor: '#F3F4F6' },
-  cardRow:   { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  card: { backgroundColor: '#fff', borderRadius: 16, padding: 14, marginBottom: 8, borderWidth: 1, borderColor: '#F3F4F6' },
+  cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   cardTitle: { fontSize: 14, fontWeight: '600', color: '#111827', flex: 1 },
-  cardSub:   { fontSize: 12, color: '#9CA3AF', marginTop: 3 },
-  badge:     { backgroundColor: '#EDE9FE', borderRadius: 999, paddingHorizontal: 8, paddingVertical: 3 },
+  cardSub: { fontSize: 12, color: '#9CA3AF', marginTop: 3 },
+  badge: { backgroundColor: '#EDE9FE', borderRadius: 999, paddingHorizontal: 8, paddingVertical: 3 },
   badgeText: { fontSize: 11, color: '#6D28D9', fontWeight: '600' },
 })
