@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { createClient, getCachedUser } from '@/lib/supabase'
+import { getCachedUser } from '@/lib/supabase'
 import { api } from '@/lib/api'
 
 const COLUMNS = ['saved', 'applied', 'interviewing', 'offer', 'rejected']
@@ -15,7 +15,6 @@ const COL_STYLE: Record<string, string> = {
 export default function PipelinePage() {
   const [pipeline, setPipeline] = useState<any>({})
   const [user, setUser] = useState<any>(null)
-  const supabase = createClient()
 
   useEffect(() => {
     getCachedUser().then((res: any) => {
@@ -42,9 +41,9 @@ export default function PipelinePage() {
         <p className="text-brand-text-muted text-lg">Track every application from saved to offer.</p>
       </header>
 
-      <div className="flex gap-6 overflow-x-auto pb-8 flex-1 items-start">
+      <div className="flex gap-4 md:gap-6 overflow-x-auto pb-8 flex-1 items-start snap-x snap-mandatory">
         {COLUMNS.map(status => (
-          <div key={status} className={`rounded-3xl border p-5 w-80 flex-shrink-0 flex flex-col max-h-full ${COL_STYLE[status]} backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.5)]`}>
+          <div key={status} className={`snap-center rounded-3xl border p-4 md:p-5 w-[85vw] max-w-[300px] md:w-80 shrink-0 flex flex-col max-h-[75vh] md:max-h-full ${COL_STYLE[status]} backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.5)]`}>
             <div className="flex items-center justify-between mb-5 px-1 shrink-0">
               <h3 className="text-sm font-bold uppercase tracking-widest">{status}</h3>
               <span className="text-xs font-bold py-1 px-2.5 rounded-full bg-black/40 border border-current opacity-80 backdrop-blur-md">

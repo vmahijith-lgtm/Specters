@@ -32,11 +32,11 @@ export default async function DashboardPage() {
         <h1 className="text-4xl font-semibold mb-2 text-brand-text tracking-tight">
           Good morning{displayName ? `, ${displayName}` : ''} <span className="opacity-80">👋</span>
         </h1>
-        <p className="text-brand-text-muted text-lg">Here's your hiring intelligence briefing.</p>
+        <p className="text-brand-text-muted text-lg">Here&apos;s your hiring intelligence briefing.</p>
       </header>
 
       {/* Stats */}
-      <div className="grid grid-cols-4 gap-6 mb-12">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-12">
         {[
           { label: 'Saved', value: statusCounts['saved'] || 0, accent: 'from-blue-500 to-blue-600', shadow: 'shadow-blue-500/20' },
           { label: 'Applied', value: statusCounts['applied'] || 0, accent: 'from-brand-secondary to-brand-secondary-dim', shadow: 'shadow-brand-secondary/20' },
@@ -56,9 +56,9 @@ export default async function DashboardPage() {
 
       {/* Setup nudge */}
       {!profile?.base_resume && (
-        <div className="relative overflow-hidden border border-amber-500/30 bg-amber-500/5 rounded-3xl p-8 mb-12 backdrop-blur-md shadow-[0_0_30px_rgba(245,158,11,0.05)]">
+        <div className="relative overflow-hidden border border-amber-500/30 bg-amber-500/5 rounded-3xl p-6 md:p-8 mb-12 backdrop-blur-md shadow-[0_0_30px_rgba(245,158,11,0.05)]">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-400 to-amber-600 opacity-50" />
-          <div className="flex items-start justify-between">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-4">
             <div>
               <p className="text-xl font-bold text-amber-500 mb-2 flex items-center gap-2">
                 <span className="text-2xl">⚡</span> Accelerate your pipeline
@@ -67,7 +67,7 @@ export default async function DashboardPage() {
                 Connect your resume and OpenAI API key to automatically tailor applications and unlock AI-driven job matches.
               </p>
             </div>
-            <a href="/settings" className="btn-primary px-6 py-3 shrink-0 flex items-center gap-2 shadow-amber-500/20">
+            <a href="/settings" className="btn-primary px-6 py-3 shrink-0 flex items-center justify-center gap-2 w-full md:w-auto shadow-amber-500/20">
               Complete setup →
             </a>
           </div>
@@ -77,27 +77,27 @@ export default async function DashboardPage() {
       {/* Top signals */}
       {signals && signals.length > 0 && (
         <section className="mb-12">
-          <div className="flex items-end justify-between mb-6">
+          <div className="flex flex-col md:flex-row items-start md:items-end justify-between mb-6 gap-2">
             <div>
-              <h2 className="text-2xl font-semibold text-brand-text">Active Hiring Signals</h2>
+              <h2 className="text-xl md:text-2xl font-semibold text-brand-text">Active Hiring Signals</h2>
               <p className="text-brand-text-muted text-sm mt-1">Companies showing high-growth indicators 48h before posting.</p>
             </div>
             <a href="/radar" className="text-sm font-medium text-brand-primary hover:text-brand-primary-dim transition-colors mb-1">View Radar →</a>
           </div>
           <div className="space-y-4">
             {signals.map((s: any) => (
-              <div key={s.id} className="glass-card rounded-3xl p-5 flex items-center justify-between group hover:bg-brand-surface-highest transition-colors">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-brand-surface border border-brand-border flex items-center justify-center text-lg font-bold text-brand-text shadow-[0_4px_10px_rgba(0,0,0,0.5)]">
+              <div key={s.id} className="glass-card rounded-3xl p-4 md:p-5 flex flex-col md:flex-row items-start md:items-center justify-between group hover:bg-brand-surface-highest transition-colors gap-4 md:gap-0">
+                <div className="flex items-center gap-4 w-full md:w-auto">
+                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-brand-surface border border-brand-border flex items-center justify-center text-lg font-bold text-brand-text shadow-[0_4px_10px_rgba(0,0,0,0.5)] shrink-0">
                     {s.company.charAt(0)}
                   </div>
-                  <div>
-                    <p className="font-semibold text-lg text-brand-text">{s.company}</p>
-                    <p className="text-sm text-brand-primary font-medium mt-0.5 tracking-wide">{s.signal_type.replace(/_/g, ' ')}</p>
+                  <div className="flex-1">
+                    <p className="font-semibold text-base md:text-lg text-brand-text">{s.company}</p>
+                    <p className="text-xs md:text-sm text-brand-primary font-medium tracking-wide mt-0.5">{s.signal_type.replace(/_/g, ' ')}</p>
                   </div>
                 </div>
-                <div className="flex flex-col items-end">
-                  <span className="bg-brand-primary/10 text-brand-primary border border-brand-primary/20 backdrop-blur-sm text-xs px-3 py-1.5 rounded-full font-bold uppercase tracking-widest">
+                <div className="flex justify-end w-full md:w-auto">
+                  <span className="bg-brand-primary/10 text-brand-primary border border-brand-primary/20 backdrop-blur-sm text-[10px] md:text-xs px-3 py-1.5 rounded-full font-bold uppercase tracking-widest text-nowrap">
                     Score {s.signal_score}
                   </span>
                 </div>

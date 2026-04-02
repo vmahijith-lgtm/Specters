@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { api } from '@/lib/api'
-import { createClient, getCachedUser } from '@/lib/supabase'
+import { getCachedUser } from '@/lib/supabase'
 
 export default function JobsPage() {
   const [jobs, setJobs] = useState<any[]>([])
@@ -12,7 +12,6 @@ export default function JobsPage() {
   const [user, setUser] = useState<any>(null)
   const [search, setSearch] = useState('')
   const router = useRouter()
-  const supabase = createClient()
 
   useEffect(() => {
     async function init() {

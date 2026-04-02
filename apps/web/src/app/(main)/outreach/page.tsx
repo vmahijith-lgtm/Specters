@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { createClient, getCachedUser } from '@/lib/supabase'
+import { getCachedUser } from '@/lib/supabase'
 import { api } from '@/lib/api'
 import type { HiringManager } from '@hiresignal/shared'
 
@@ -23,8 +23,6 @@ export default function OutreachPage() {
   const [managersLoading, setManagersLoading] = useState(false)
   const [managersError, setManagersError] = useState('')
   const [selectedManagerId, setSelectedManagerId] = useState('')
-
-  const supabase = createClient()
 
   useEffect(() => {
     getCachedUser().then((res: any) => setUser(res.data?.user))

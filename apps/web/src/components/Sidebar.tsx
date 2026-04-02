@@ -25,34 +25,52 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="w-64 border-r border-brand-border bg-brand-surface fixed inset-y-0 flex flex-col z-20">
-      <div className="p-6 flex items-center gap-3 mb-4">
-        <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br from-brand-primary to-brand-primary-dim shadow-[0_0_15px_rgba(204,151,255,0.4)]">
-          <span className="text-[#1a0033] font-bold text-sm">S</span>
+    <>
+      {/* Desktop Sidebar */}
+      <aside className="w-64 border-r border-brand-border bg-brand-surface fixed inset-y-0 hidden md:flex flex-col z-20">
+        <div className="p-6 flex items-center gap-3 mb-4">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br from-brand-primary to-brand-primary-dim shadow-[0_0_15px_rgba(204,151,255,0.4)]">
+            <span className="text-[#1a0033] font-bold text-sm">H</span>
+          </div>
+          <span className="font-semibold text-lg text-brand-text tracking-tight font-display">HireSignal</span>
         </div>
-        <span className="font-semibold text-lg text-brand-text tracking-tight font-display">Specters</span>
-      </div>
-      <nav className="flex-1 px-4 space-y-1">
-        {NAV.map(({ href, label, icon }) => {
+        <nav className="flex-1 px-4 space-y-1">
+          {NAV.map(({ href, label, icon }) => {
+            const active = pathname === href || pathname.startsWith(href + '/')
+            return (
+              <Link key={href} href={href}
+                className={`flex items-center gap-3 px-3 py-3 rounded-2xl text-sm transition-all duration-300
+                            ${active
+                    ? 'bg-brand-surface-highest text-brand-primary shadow-[inset_0_1px_0_0_rgba(204,151,255,0.15)] border border-brand-border'
+                    : 'text-brand-text-muted hover:bg-brand-surface-high hover:text-brand-text'}`}>
+                <span className={`text-base ${active ? 'opacity-100 drop-shadow-[0_0_8px_rgba(204,151,255,0.6)]' : 'opacity-60'}`}>{icon}</span>
+                <span className={active ? 'font-medium' : ''}>{label}</span>
+              </Link>
+            )
+          })}
+        </nav>
+        <div className="p-4 border-t border-brand-border">
+          <button onClick={signOut}
+            className="text-sm text-brand-text-muted hover:text-brand-text hover:bg-brand-surface-high w-full text-left px-3 py-3 rounded-xl transition">
+            Sign out
+          </button>
+        </div>
+      </aside>
+
+      {/* Mobile Bottom Nav */}
+      <nav className="fixed bottom-0 inset-x-0 bg-brand-surface-high border-t border-brand-border z-50 md:hidden flex justify-between px-2 py-2 pb-safe glass-card">
+        {NAV.slice(0, 5).map(({ href, label, icon }) => {
           const active = pathname === href || pathname.startsWith(href + '/')
           return (
             <Link key={href} href={href}
-              className={`flex items-center gap-3 px-3 py-3 rounded-2xl text-sm transition-all duration-300
-                          ${active
-                  ? 'bg-brand-surface-highest text-brand-primary shadow-[inset_0_1px_0_0_rgba(204,151,255,0.15)] border border-brand-border'
-                  : 'text-brand-text-muted hover:bg-brand-surface-high hover:text-brand-text'}`}>
-              <span className={`text-base ${active ? 'opacity-100 drop-shadow-[0_0_8px_rgba(204,151,255,0.6)]' : 'opacity-60'}`}>{icon}</span>
-              <span className={active ? 'font-medium' : ''}>{label}</span>
+              className={`flex flex-col items-center justify-center w-full py-2 rounded-xl transition-all duration-300
+                          ${active ? 'text-brand-primary' : 'text-brand-text-muted hover:text-brand-text'}`}>
+              <span className={`text-xl mb-1 ${active ? 'drop-shadow-[0_0_8px_rgba(204,151,255,0.6)]' : 'opacity-60'}`}>{icon}</span>
+              <span className="text-[10px] font-medium tracking-tight truncate w-full text-center">{label}</span>
             </Link>
           )
         })}
       </nav>
-      <div className="p-4 border-t border-brand-border">
-        <button onClick={signOut}
-          className="text-sm text-brand-text-muted hover:text-brand-text hover:bg-brand-surface-high w-full text-left px-3 py-3 rounded-xl transition">
-          Sign out
-        </button>
-      </div>
-    </aside>
+    </>
   )
 }
