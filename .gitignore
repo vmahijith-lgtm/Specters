@@ -69,3 +69,6 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo
+
+# GitHub / Copilot Skills
+.github/
