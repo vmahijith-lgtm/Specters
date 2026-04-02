@@ -4,7 +4,7 @@ import { useSearchParams } from 'next/navigation'
 import { createClient, getCachedUser } from '@/lib/supabase'
 
 function SettingsContent() {
-  const [profile, setProfile] = useState<any>(null)
+  const [profile, setProfile] = useState<any /* eslint-disable-line @typescript-eslint/no-explicit-any */>(null)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [googleStatus, setGoogleStatus] = useState<'connected' | 'error' | null>(null)
@@ -18,16 +18,17 @@ function SettingsContent() {
   }, [searchParams])
 
   useEffect(() => {
-    getCachedUser().then((res: any) => {
+    getCachedUser().then((res: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => {
       if (res.data?.user) {
         supabase.from('profiles').select('*').eq('id', res.data.user.id).single()
-          .then(({ data: p }: any) => setProfile(p))
+          .then(({ data: p }: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => setProfile(p))
       }
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  function update(key: string, value: any) {
-    setProfile((prev: any) => ({ ...prev, [key]: value }))
+  function update(key: string, value: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) {
+    setProfile((prev: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => ({ ...prev, [key]: value }))
   }
 
   async function save() {

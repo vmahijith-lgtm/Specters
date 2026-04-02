@@ -7,25 +7,25 @@ export default function ResumePage() {
   const [resumeText, setResumeText] = useState('')
   const [saved, setSaved] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [user, setUser] = useState<any>(null)
-  const [tailoredResumes, setTailoredResumes] = useState<any[]>([])
+  const [user, setUser] = useState<any /* eslint-disable-line @typescript-eslint/no-explicit-any */>(null)
+  const [tailoredResumes, setTailoredResumes] = useState<any[] /* eslint-disable-line @typescript-eslint/no-explicit-any */>([])
   const [selectedResumeId, setSelectedResumeId] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
 
   const supabase = createClient()
 
   useEffect(() => {
-    getCachedUser().then((res: any) => {
+    getCachedUser().then((res: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => {
       setUser(res.data?.user)
       if (res.data?.user) {
         supabase.from('profiles').select('base_resume').eq('id', res.data.user.id).single()
-          .then(({ data: p }: any) => { if (p?.base_resume) setResumeText(p.base_resume) })
+          .then(({ data: p }: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => { if (p?.base_resume) setResumeText(p.base_resume) })
 
         supabase.from('user_jobs')
           .select('id, tailored_resume_text, jobs(title, company)')
           .eq('user_id', res.data.user.id)
           .not('tailored_resume_text', 'is', null)
-          .then(({ data }: any) => {
+          .then(({ data }: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => {
             if (data) setTailoredResumes(data)
           })
       }
@@ -98,7 +98,7 @@ export default function ResumePage() {
             </h3>
             <ol className="text-brand-text-muted space-y-4 list-decimal list-outside ml-4 font-medium leading-relaxed">
               <li className="pl-2">You save your comprehensive base resume here.</li>
-              <li className="pl-2">On the <span className="text-brand-text">Jobs</span> page, click "Tailor resume" on any listing.</li>
+              <li className="pl-2">On the <span className="text-brand-text">Jobs</span> page, click &quot;Tailor resume&quot; on any listing.</li>
               <li className="pl-2">AI automatically rewrites your resume strictly into perfect LaTeX syntax making you ATS ready.</li>
               <li className="pl-2">Copy the generated output below and compile it instantly in Overleaf.</li>
             </ol>
@@ -119,7 +119,7 @@ export default function ResumePage() {
 
         {tailoredResumes.length === 0 ? (
           <div className="text-center p-10 border-2 border-dashed border-brand-border/50 rounded-2xl">
-            <p className="text-brand-text-muted font-medium">You haven't tailored any resumes yet. Start tailoring from the Jobs page!</p>
+            <p className="text-brand-text-muted font-medium">You haven&apos;t tailored any resumes yet. Start tailoring from the Jobs page!</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">

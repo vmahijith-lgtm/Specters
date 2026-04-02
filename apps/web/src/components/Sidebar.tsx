@@ -30,9 +30,9 @@ export default function Sidebar() {
       <aside className="w-64 border-r border-brand-border bg-brand-surface fixed inset-y-0 hidden md:flex flex-col z-20">
         <div className="p-6 flex items-center gap-3 mb-4">
           <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br from-brand-primary to-brand-primary-dim shadow-[0_0_15px_rgba(204,151,255,0.4)]">
-            <span className="text-[#1a0033] font-bold text-sm">H</span>
+            <span className="text-[#1a0033] font-bold text-sm">S</span>
           </div>
-          <span className="font-semibold text-lg text-brand-text tracking-tight font-display">HireSignal</span>
+          <span className="font-semibold text-lg text-brand-text tracking-tight font-display">Specters</span>
         </div>
         <nav className="flex-1 px-4 space-y-1">
           {NAV.map(({ href, label, icon }) => {

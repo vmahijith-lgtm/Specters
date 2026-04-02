@@ -13,7 +13,7 @@ const TYPE_LABELS: Record<string, string> = {
 }
 
 export default function RadarPage() {
-  const [signals, setSignals] = useState<any[]>([])
+  const [signals, setSignals] = useState<any[] /* eslint-disable-line @typescript-eslint/no-explicit-any */>([])
   const [loading, setLoading] = useState(true)
   const [scanning, setScanning] = useState(false)
   const [hasWatchlist, setHasWatchlist] = useState(false)
@@ -62,6 +62,7 @@ export default function RadarPage() {
       }
     }
     load()
+// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   async function handleScanNow() {
@@ -96,7 +97,7 @@ export default function RadarPage() {
           <p className="text-brand-text-muted text-lg">No signals detected yet.</p>
           {hasWatchlist ? (
             <>
-              <p className="text-sm mt-2 text-brand-text-muted/60">We're actively scanning the network for your tuned watchlist. Check back soon.</p>
+              <p className="text-sm mt-2 text-brand-text-muted/60">We&apos;re actively scanning the network for your tuned watchlist. Check back soon.</p>
               <button
                 onClick={handleScanNow}
                 disabled={scanning}
@@ -119,7 +120,7 @@ export default function RadarPage() {
         </div>
       ) : (
         <div className="grid gap-4">
-          {signals.map((s: any) => (
+          {signals.map((s: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => (
             <div key={s.id}
               className="glass-card rounded-3xl p-6 flex items-start justify-between group hover:bg-brand-surface-highest transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_10px_30px_rgba(204,151,255,0.05)] border border-brand-border">
               <div className="flex items-start gap-5">

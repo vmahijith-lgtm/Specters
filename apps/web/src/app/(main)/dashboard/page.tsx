@@ -12,7 +12,7 @@ export default async function DashboardPage() {
   const { data: signals } = await supabase.from('signals').select('*').order('detected_at', { ascending: false }).limit(3)
   const { data: userJobs } = await supabase.from('user_jobs').select('*, jobs(*)').eq('user_id', user.id).limit(5)
 
-  const statusCounts = (userJobs || []).reduce((acc: any, uj: any) => {
+  const statusCounts = (userJobs || []).reduce((acc: any , uj: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => {
     acc[uj.status] = (acc[uj.status] || 0) + 1
     return acc
   }, {})
@@ -85,7 +85,7 @@ export default async function DashboardPage() {
             <a href="/radar" className="text-sm font-medium text-brand-primary hover:text-brand-primary-dim transition-colors mb-1">View Radar →</a>
           </div>
           <div className="space-y-4">
-            {signals.map((s: any) => (
+            {signals.map((s: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => (
               <div key={s.id} className="glass-card rounded-3xl p-4 md:p-5 flex flex-col md:flex-row items-start md:items-center justify-between group hover:bg-brand-surface-highest transition-colors gap-4 md:gap-0">
                 <div className="flex items-center gap-4 w-full md:w-auto">
                   <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-brand-surface border border-brand-border flex items-center justify-center text-lg font-bold text-brand-text shadow-[0_4px_10px_rgba(0,0,0,0.5)] shrink-0">

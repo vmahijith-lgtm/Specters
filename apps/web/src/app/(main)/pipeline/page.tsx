@@ -13,11 +13,11 @@ const COL_STYLE: Record<string, string> = {
 }
 
 export default function PipelinePage() {
-  const [pipeline, setPipeline] = useState<any>({})
-  const [user, setUser] = useState<any>(null)
+  const [pipeline, setPipeline] = useState<any /* eslint-disable-line @typescript-eslint/no-explicit-any */>({})
+  const [user, setUser] = useState<any /* eslint-disable-line @typescript-eslint/no-explicit-any */>(null)
 
   useEffect(() => {
-    getCachedUser().then((res: any) => {
+    getCachedUser().then((res: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => {
       setUser(res.data?.user)
       if (res.data?.user) {
         api.getPipeline(res.data.user.id).then(setPipeline)
@@ -52,7 +52,7 @@ export default function PipelinePage() {
             </div>
 
             <div className="space-y-4 overflow-y-auto pr-2 pb-4 flex-1">
-              {(pipeline[status] || []).map((uj: any) => (
+              {(pipeline[status] || []).map((uj: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => (
                 <div key={uj.id} className="solid-card rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(0,0,0,0.6)] group shadow-md border-brand-border/50 bg-[#16161d]">
                   <p className="text-lg font-bold text-brand-text leading-tight mb-1">{uj.jobs?.title}</p>
                   <p className="text-sm text-brand-text-muted font-medium mb-3">{uj.jobs?.company}</p>

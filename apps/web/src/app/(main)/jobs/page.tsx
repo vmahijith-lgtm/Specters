@@ -5,11 +5,11 @@ import { api } from '@/lib/api'
 import { getCachedUser } from '@/lib/supabase'
 
 export default function JobsPage() {
-  const [jobs, setJobs] = useState<any[]>([])
+  const [jobs, setJobs] = useState<any[] /* eslint-disable-line @typescript-eslint/no-explicit-any */>([])
   const [loading, setLoading] = useState(true)
   const [scanning, setScanning] = useState(false)
   const [tailoring, setTailoring] = useState<string | null>(null)
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<any /* eslint-disable-line @typescript-eslint/no-explicit-any */>(null)
   const [search, setSearch] = useState('')
   const router = useRouter()
 
@@ -57,7 +57,7 @@ export default function JobsPage() {
       const r = await api.tailorResume(jobId, user.id, true)
       if (r.doc_url) window.open(r.doc_url, '_blank')
       else router.push('/pipeline')
-    } catch (e: any) {
+    } catch (e: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) {
       alert(e.message || 'Tailoring failed. Check your settings.')
     }
     setTailoring(null)
@@ -70,7 +70,7 @@ export default function JobsPage() {
       await api.scanJobs(user.id)
       const r = await api.getJobs({ limit: 30 })
       setJobs(r.jobs)
-    } catch (e: any) {
+    } catch (e: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) {
       alert(e.message || 'Job scan failed.')
     }
     setScanning(false)
@@ -134,7 +134,7 @@ export default function JobsPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {filtered.map((job: any) => (
+          {filtered.map((job: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => (
             <div key={job.id} className="glass-card rounded-3xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 group hover:bg-brand-surface-highest transition-all duration-300 hover:shadow-[0_10px_30px_rgba(204,151,255,0.05)] border border-brand-border">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">

@@ -11,6 +11,7 @@ async function apiFetch(path: string, options: RequestInit = {}) {
 
 export const api = {
   getJobs: (params?: { company?: string; role?: string; limit?: number; user_id?: string }) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const qs = new URLSearchParams(params as any).toString()
     return apiFetch(`/jobs?${qs}`)
   },

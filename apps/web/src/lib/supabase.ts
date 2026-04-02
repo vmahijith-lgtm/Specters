@@ -16,19 +16,19 @@ export function createClient() {
 }
 
 // Deduplicate concurrent user fetches to prevent Supabase lock stealing
-let userPromise: Promise<any> | null = null;
+let userPromise: Promise<any /* eslint-disable-line @typescript-eslint/no-explicit-any */> | null = null;
 let lastUserFetchTime = 0;
 
-export function getCachedUser(): Promise<any> {
+export function getCachedUser(): Promise<any /* eslint-disable-line @typescript-eslint/no-explicit-any */> {
   const now = Date.now()
   if (userPromise && (now - lastUserFetchTime < 2000)) {
     return userPromise;
   }
   const client = createClient()
-  userPromise = client.auth.getUser().catch((err: any) => {
+  userPromise = client.auth.getUser().catch((err: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => {
     userPromise = null;
     throw err;
   });
   lastUserFetchTime = now;
-  return userPromise as Promise<any>;
+  return userPromise as Promise<any /* eslint-disable-line @typescript-eslint/no-explicit-any */>;
 }

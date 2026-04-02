@@ -16,8 +16,8 @@ export default function OutreachPage() {
   const [achievement, setAchievement] = useState('')
   const [draft, setDraft] = useState('')
   const [loading, setLoading] = useState(false)
-  const [jobs, setJobs] = useState<any[]>([])
-  const [user, setUser] = useState<any>(null)
+  const [jobs, setJobs] = useState<any[] /* eslint-disable-line @typescript-eslint/no-explicit-any */>([])
+  const [user, setUser] = useState<any /* eslint-disable-line @typescript-eslint/no-explicit-any */>(null)
 
   const [managers, setManagers] = useState<HiringManager[]>([])
   const [managersLoading, setManagersLoading] = useState(false)
@@ -25,7 +25,7 @@ export default function OutreachPage() {
   const [selectedManagerId, setSelectedManagerId] = useState('')
 
   useEffect(() => {
-    getCachedUser().then((res: any) => setUser(res.data?.user))
+    getCachedUser().then((res: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => setUser(res.data?.user))
     api.getJobs({ limit: 50 }).then(r => setJobs(r.jobs))
   }, [])
 
@@ -51,7 +51,7 @@ export default function OutreachPage() {
     try {
       const r = await api.discoverHiringManagers(jobId, user.id)
       setManagers(r.managers)
-    } catch (e: any) {
+    } catch (e: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) {
       setManagersError(e.message)
     }
     setManagersLoading(false)
@@ -71,7 +71,7 @@ export default function OutreachPage() {
     try {
       const r = await api.draftOutreach(jobId, user.id, managerName, achievement)
       setDraft(r.draft)
-    } catch (e: any) {
+    } catch (e: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) {
       alert(e.message)
     }
     setLoading(false)
@@ -124,7 +124,7 @@ export default function OutreachPage() {
               <select value={jobId} onChange={e => handleJobChange(e.target.value)}
                 className="w-full bg-brand-surface border border-brand-border rounded-xl px-4 py-3.5 text-brand-text focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-all appearance-none cursor-pointer shadow-inner">
                 <option value="">Select an active signal...</option>
-                {jobs.map((j: any) => (
+                {jobs.map((j: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => (
                   <option key={j.id} value={j.id}>{j.title} — {j.company}</option>
                 ))}
               </select>

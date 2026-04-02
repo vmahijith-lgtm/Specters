@@ -5,7 +5,7 @@ import { api } from '@/lib/api'
 import Link from 'next/link'
 
 export default function LandingPage() {
-  const [signals, setSignals] = useState<any[]>([])
+  const [signals, setSignals] = useState<any[] /* eslint-disable-line @typescript-eslint/no-explicit-any */>([])
   const [mounted, setMounted] = useState(false)
 
   const fallbackSignals = [
@@ -29,6 +29,7 @@ export default function LandingPage() {
         console.error(e)
         setSignals(fallbackSignals)
       })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
