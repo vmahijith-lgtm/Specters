@@ -1,5 +1,5 @@
 -- ══════════════════════════════════════════════════════
--- HireSignal database schema
+-- Specters database schema
 -- ══════════════════════════════════════════════════════
 
 -- User profiles (extends Supabase auth.users)

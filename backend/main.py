@@ -20,7 +20,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000", 
-        "https://hiresignal.vercel.app", 
+        "https://specters.vercel.app", 
+        "https://hiresignal.vercel.app",
         "https://hire-signal-web.vercel.app",
         "https://specters.works",
         "https://www.specters.works"

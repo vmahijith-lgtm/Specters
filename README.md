@@ -1,6 +1,6 @@
-# HireSignal
+# Specters
 
-HireSignal is a proactive job-seeking platform designed to find top jobs *before* they are officially posted. By scanning early social and business signals—like TechCrunch funding rounds, GitHub open-source spikes, or leadership changes—HireSignal identifies expanding companies so you can reach out to Hiring Managers ahead of the competition.
+Specters is a proactive job-seeking platform designed to find top jobs *before* they are officially posted. By scanning early social and business signals—like TechCrunch funding rounds, GitHub open-source spikes, or leadership changes—Specters identifies expanding companies so you can reach out to Hiring Managers ahead of the competition.
 
 ## 🏗 Architecture
 This project is built as a complete monorepo, containing:

@@ -1,18 +1,18 @@
 {
   "expo": {
-    "name": "HireSignal",
-    "slug": "hiresignal",
+    "name": "Specters",
+    "slug": "specters",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "scheme": "hiresignal",
+    "scheme": "specters",
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#7C3AED"
       },
-      "package": "com.hiresignal.app",
+      "package": "com.specters.app",
       "googleServicesFile": "./google-services.json"
     },
     "plugins": [

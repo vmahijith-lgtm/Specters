@@ -1,5 +1,5 @@
 {
-  "name": "hiresignal",
+  "name": "specters",
   "private": true,
   "workspaces": [
     "apps/*",

@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import { getCachedUser } from '@/lib/supabase'
 import { api } from '@/lib/api'
-import type { HiringManager } from '@hiresignal/shared'
+import type { HiringManager } from '@specters/shared'
 
 const LINKEDIN_PATTERNS = [
   { label: 'Direct intent', query: '"I\'m hiring" OR "looking for a" OR "open role"' },

@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: hiresignal-backend
+    name: specters-backend
     runtime: python
     rootDir: backend
     buildCommand: "./render-build.sh"
