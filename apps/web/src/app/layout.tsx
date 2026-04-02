@@ -15,9 +15,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={`${spaceGrotesk.variable} ${manrope.variable} antialiased`}>
         {children}
-        <div className="fixed bottom-2 right-4 text-xs font-body text-brand-text-muted/40 select-none pointer-events-none z-[100]">
-          Mahi
-        </div>
       </body>
     </html>
   )
